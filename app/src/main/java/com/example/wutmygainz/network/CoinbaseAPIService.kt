@@ -28,7 +28,7 @@ interface CoinbaseApiService {
     // Gets answers objects
     @GET("prices/BTC-USD/spot")
     suspend fun getBTCPrice():
-        Response<CryptoObject>
+        Response<DataObject>
 
 //    @GET("pokemon/{id}")
 //    suspend fun getSpritesList(@Path("id") id: Int):
