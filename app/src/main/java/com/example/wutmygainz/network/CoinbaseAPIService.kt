@@ -7,6 +7,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 private const val BASE_URL = "https://api.coinbase.com/v2/"
 
@@ -26,13 +28,13 @@ private val retrofit = Retrofit.Builder()
 // Implement API service interface that return JSON data as a string (through Scalars)
 interface CoinbaseApiService {
     // Gets answers objects
-    @GET("prices/BTC-USD/spot")
-    suspend fun getBTCPrice():
+    @GET("prices/{currency_pair}/spot")
+    suspend fun getHistoricCoinPrice(@Path("currency_pair") pair: String, @Query("date") type: String):
         Response<DataObject>
 
-//    @GET("pokemon/{id}")
-//    suspend fun getSpritesList(@Path("id") id: Int):
-//            Response<Pokemon>
+    @GET("prices/{currency_pair}/spot")
+    suspend fun getCurrentCoinPrice(@Path("currency_pair") pair: String):
+        Response<DataObject>
 }
 
 // Creates API object using Retrofit to implement API Service

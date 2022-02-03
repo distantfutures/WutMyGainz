@@ -22,12 +22,16 @@ class HomeFragment : Fragment() {
         val job = Job()
         val coroutineScope = CoroutineScope(job + Dispatchers.Main)
 
+        val date = "2014-10-13"
+        val currencyPair = "BTC-USD"
+
         coroutineScope.launch {
-            val response = CoinbaseApi.retrofitService.getBTCPrice()
-            if (response.isSuccessful) {
-                Log.i("CheckAPI Service", "Success! ${response.body()}")
-                val dataResponse = response.body()
-                Log.i("CheckAPI Service", "Success! ${dataResponse?.data?.base}")
+            val responseHistoric = CoinbaseApi.retrofitService.getHistoricCoinPrice(currencyPair, date)
+            val responseSpot = CoinbaseApi.retrofitService.getCurrentCoinPrice(currencyPair)
+            if (responseHistoric.isSuccessful) {
+                Log.i("CheckAPI Service", "Historic: ${responseHistoric.body()?.data?.amount}")
+                Log.i("CheckAPI Service", "Historic: ${responseSpot.body()?.data?.amount}")
+
             } else {
                 Log.i("CheckAPI Service", "Failed!")
             }
