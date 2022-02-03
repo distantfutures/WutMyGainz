@@ -3,4 +3,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="historical_price">Historical Price: $%s</string>
     <string name="current_price">Current Price: $%s</string>
+    <string-array name="currency_pairs">
+        <item>BTC-USD</item>
+        <item>ETH-USD</item>
+        <item>ADA-USD</item>
+        <item>ARGO-USD</item>
+        <item>DOGE-USD</item>
+    </string-array>
 </resources>

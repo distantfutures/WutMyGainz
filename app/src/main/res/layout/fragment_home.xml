@@ -12,21 +12,48 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
         <TextView
             android:id="@+id/historical_price_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:hint="Historical Price: $35,908"
+            android:gravity="center"
             android:text="@{String.format(@string/historical_price, viewModelHome.historicPrice)}"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:textSize="24sp"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/current_price_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:gravity="center"
+            android:hint="Current Price: $40,987"
             android:text="@{String.format(@string/current_price, viewModelHome.currentPrice)}"
+            android:textSize="24sp"
             app:layout_constraintTop_toBottomOf="@+id/historical_price_text" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:id="@+id/currency_pair_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:hint="Currency Pairs"
+            app:layout_constraintBottom_toBottomOf="parent" >
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:text="BTC-USD"
+                android:textSize="24dp"
+                android:textStyle="bold"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
