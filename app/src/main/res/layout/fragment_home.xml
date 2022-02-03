@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".HomeFragment">
 
+    <data>
+        <variable
+            name="viewModelHome"
+            type="com.example.wutmygainz.HomeViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -12,14 +18,14 @@
             android:id="@+id/historical_price_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/historical_price"
+            android:text="@{String.format(@string/historical_price, viewModelHome.historicPrice)}"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/current_price_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/current_price"
+            android:text="@{String.format(@string/current_price, viewModelHome.currentPrice)}"
             app:layout_constraintTop_toBottomOf="@+id/historical_price_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

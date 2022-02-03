@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">WutMyGainz</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="historical_price">Historical Price:</string>
-    <string name="current_price">Current Price:</string>
+    <string name="historical_price">Historical Price: $%s</string>
+    <string name="current_price">Current Price: $%s</string>
 </resources>
