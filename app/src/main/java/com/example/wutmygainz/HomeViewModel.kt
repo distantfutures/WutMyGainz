@@ -56,6 +56,7 @@ class HomeViewModel : ViewModel() {
 
     fun onSetSelectedPairs(pairs: String) {
         _currencyPair.value = pairs
+        getCoinPrices()
         Log.i("CheckSelectedPairs", "${_currencyPair.value}")
     }
 }

@@ -7,7 +7,11 @@
         <item>BTC-USD</item>
         <item>ETH-USD</item>
         <item>ADA-USD</item>
-        <item>ARGO-USD</item>
+        <item>ALGO-USD</item>
         <item>DOGE-USD</item>
+        <item>LINK-USD</item>
+        <item>SHIB-USD</item>
+        <item>SOL-USD</item>
+        <item>POLY-USD</item>
     </string-array>
 </resources>
