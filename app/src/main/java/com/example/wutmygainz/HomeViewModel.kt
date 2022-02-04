@@ -53,4 +53,9 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
+
+    fun onSetSelectedPairs(pairs: String) {
+        _currencyPair.value = pairs
+        Log.i("CheckSelectedPairs", "${_currencyPair.value}")
+    }
 }
