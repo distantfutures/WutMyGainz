@@ -9,6 +9,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 class HomeViewModel : ViewModel() {
 
@@ -43,10 +45,12 @@ class HomeViewModel : ViewModel() {
             val responseSpot = CoinbaseApi.retrofitService.getCurrentCoinPrice(_currencyPair.value!!)
 
             if (responseHistoric.isSuccessful) {
-                _historicPrice.value = responseHistoric.body()?.data?.amount
+                val historicDouble = responseHistoric.body()?.data?.amount
+                _historicPrice.value = historicDouble?.convert()
                 Log.i("CheckAPI Service", "Historic: ${responseHistoric.body()?.data?.amount}")
 
-                _currentPrice.value = responseSpot.body()?.data?.amount
+                val currentDouble = responseSpot.body()?.data?.amount
+                _currentPrice.value = currentDouble?.convert()
                 Log.i("CheckAPI Service", "Current: ${responseSpot.body()?.data?.amount}")
             } else {
                 Log.i("CheckAPI Service", "Failed!")
@@ -58,5 +62,10 @@ class HomeViewModel : ViewModel() {
         _currencyPair.value = pairs
         getCoinPrices()
         Log.i("CheckSelectedPairs", "${_currencyPair.value}")
+    }
+    fun Double.convert(): String {
+        val format = DecimalFormat("#,###.00")
+        //format.isDecimalSeparatorAlwaysShown = false
+        return format.format(this).toString()
     }
 }
