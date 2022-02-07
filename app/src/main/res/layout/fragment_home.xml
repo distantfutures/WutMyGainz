@@ -65,6 +65,49 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/gainz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_box_outline"
+            android:clickable="true"
+            android:inputType="datetime"
+            android:padding="30dp"
+            android:text="+65%"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="60sp"
+            app:layout_constraintBottom_toTopOf="@+id/date_picker_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/current_price_text" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/date_picker_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date"
+            android:padding="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/currency_pair_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:imeOptions="actionDone"
+                android:inputType="date"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@+id/currency_pairs"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:id="@+id/currency_pair_text"
@@ -81,7 +124,7 @@
                 android:inputType="none"
                 android:text="BTC-USD"
                 android:textSize="24dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 

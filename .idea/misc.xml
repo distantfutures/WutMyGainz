@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/andzh/AndroidStudioProjects/PersonalProjects/WutMyGainz/app/src/main/res/drawable/rounded_box_outline.xml" value="0.3541666666666667" />
         <entry key="..\:/Users/andzh/AndroidStudioProjects/PersonalProjects/WutMyGainz/app/src/main/res/layout/activity_main.xml" value="0.16438703140830802" />
         <entry key="..\:/Users/andzh/AndroidStudioProjects/PersonalProjects/WutMyGainz/app/src/main/res/layout/dropdown_currency_pair.xml" value="0.27898550724637683" />
         <entry key="..\:/Users/andzh/AndroidStudioProjects/PersonalProjects/WutMyGainz/app/src/main/res/layout/fragment_home.xml" value="0.335" />
+        <entry key="..\:/Users/andzh/AndroidStudioProjects/PersonalProjects/WutMyGainz/app/src/main/res/layout/rounded_box_outline.xml" value="0.2703804347826087" />
       </map>
     </option>
   </component>

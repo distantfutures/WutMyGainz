@@ -46,11 +46,11 @@ class HomeViewModel : ViewModel() {
 
             if (responseHistoric.isSuccessful) {
                 val historicDouble = responseHistoric.body()?.data?.amount
-                _historicPrice.value = historicDouble?.convert()
+                _historicPrice.value = historicDouble?.currencyFormat()
                 Log.i("CheckAPI Service", "Historic: ${responseHistoric.body()?.data?.amount}")
 
                 val currentDouble = responseSpot.body()?.data?.amount
-                _currentPrice.value = currentDouble?.convert()
+                _currentPrice.value = currentDouble?.currencyFormat()
                 Log.i("CheckAPI Service", "Current: ${responseSpot.body()?.data?.amount}")
             } else {
                 Log.i("CheckAPI Service", "Failed!")
@@ -63,9 +63,8 @@ class HomeViewModel : ViewModel() {
         getCoinPrices()
         Log.i("CheckSelectedPairs", "${_currencyPair.value}")
     }
-    fun Double.convert(): String {
-        val format = DecimalFormat("#,###.00")
-        //format.isDecimalSeparatorAlwaysShown = false
-        return format.format(this).toString()
+    fun Double.currencyFormat(): String {
+        val decimalFormat = DecimalFormat("#,###,##0.00")
+        return decimalFormat.format(this).toString()
     }
 }
