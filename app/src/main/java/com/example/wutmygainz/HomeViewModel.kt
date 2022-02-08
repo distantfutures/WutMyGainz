@@ -10,7 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
-import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeViewModel : ViewModel() {
 
@@ -33,9 +34,17 @@ class HomeViewModel : ViewModel() {
     val currencyPair: LiveData<String>
         get() = _currencyPair
 
+    var startYear = 0
+    var startMonth = 0
+    var startDay = 0
+
+    var pickYear = 0
+    var pickMonth = 0
+    var pickDay = 0
+
     init {
         _currencyPair.value = "BTC-USD"
-        _selectedDate.value = "2017-01-16"
+        getdateCalendar()
         getCoinPrices()
     }
 
@@ -66,5 +75,31 @@ class HomeViewModel : ViewModel() {
     fun Double.currencyFormat(): String {
         val decimalFormat = DecimalFormat("#,###,##0.00")
         return decimalFormat.format(this).toString()
+    }
+    fun setNewDateTime(): String? {
+        getdateCalendar()
+        var dateString = ""
+
+        return dateString
+    }
+    private fun getdateCalendar() {
+        val currentDate = Calendar.getInstance()
+        startYear = currentDate.get(Calendar.YEAR)
+        startMonth = currentDate.get(Calendar.MONTH)
+        startDay = currentDate.get(Calendar.DAY_OF_MONTH)
+        currentDate.set(startYear, startMonth, startDay)
+        val formatterDate = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        _selectedDate.value = formatterDate.format(currentDate.time)
+        Log.i("CheckHomeViewModel", "$startYear $startMonth $startDay")
+    }
+    fun pickedDate(year: Int, month: Int, day: Int) {
+        val pickDate = Calendar.getInstance()
+        pickYear = year
+        pickMonth = month
+        pickDay = day
+        pickDate.set(pickYear, pickMonth, pickDay)
+        // format Date
+        val formatterDate = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        _selectedDate.value = formatterDate.format(pickDate.time)
     }
 }
