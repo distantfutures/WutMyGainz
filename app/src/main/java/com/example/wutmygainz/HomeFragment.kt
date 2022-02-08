@@ -1,5 +1,6 @@
 package com.example.wutmygainz
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
@@ -58,8 +59,9 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun datePickerDialog() {
-        DatePickerDialog(requireActivity(), { _, year, month, day ->
+        DatePickerDialog(requireActivity(),  android.R.style.Theme_Material_Dialog, { _, year, month, day ->
             homeViewModel.pickedDate(year, month, day)
             showToastLong(homeViewModel.selectedDate.value)
         }, homeViewModel.startYear, homeViewModel.startMonth, homeViewModel.startDay).show()
