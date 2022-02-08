@@ -76,7 +76,7 @@
             android:clickable="true"
             android:inputType="datetime"
             android:padding="30dp"
-            android:text="+65%"
+            android:text="@{String.format(@string/percent_gainz, viewModelHome.theGainz)}"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="50sp"

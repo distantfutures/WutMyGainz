@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.wutmygainz.network.CoinbaseApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,6 +31,10 @@ class HomeViewModel : ViewModel() {
     val currencyPair: LiveData<String>
         get() = _currencyPair
 
+    private var _theGainz = MutableLiveData<String>()
+    val theGainz: LiveData<String>
+        get() = _theGainz
+
     var startYear = 0
     var startMonth = 0
     var startDay = 0
@@ -44,7 +45,7 @@ class HomeViewModel : ViewModel() {
 
     init {
         _currencyPair.value = "BTC-USD"
-        getdateCalendar()
+        getDateCalendar()
         getCoinPrices()
     }
 
@@ -61,6 +62,7 @@ class HomeViewModel : ViewModel() {
                 val currentDouble = responseSpot.body()?.data?.amount
                 _currentPrice.value = currentDouble?.currencyFormat()
                 Log.i("CheckAPI Service", "Current: ${responseSpot.body()?.data?.amount}")
+                calculateTheGainz(currentDouble, historicDouble)
             } else {
                 Log.i("CheckAPI Service", "Failed!")
             }
@@ -72,17 +74,11 @@ class HomeViewModel : ViewModel() {
         getCoinPrices()
         Log.i("CheckSelectedPairs", "${_currencyPair.value}")
     }
-    fun Double.currencyFormat(): String {
+    private fun Double.currencyFormat(): String {
         val decimalFormat = DecimalFormat("#,###,##0.00")
         return decimalFormat.format(this).toString()
     }
-    fun setNewDateTime(): String? {
-        getdateCalendar()
-        var dateString = ""
-
-        return dateString
-    }
-    private fun getdateCalendar() {
+    private fun getDateCalendar() {
         val currentDate = Calendar.getInstance()
         startYear = currentDate.get(Calendar.YEAR)
         startMonth = currentDate.get(Calendar.MONTH)
@@ -101,5 +97,11 @@ class HomeViewModel : ViewModel() {
         // format Date
         val formatterDate = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
         _selectedDate.value = formatterDate.format(pickDate.time)
+    }
+    private fun calculateTheGainz(current: Double?, historic: Double?) {
+        val gainzInt = (current?.div(historic!!))?.times(100)
+        val gainzString = String.format("%.2f", gainzInt)
+        _theGainz.value = gainzString
+        Log.i("CheckHomeViewModel", "$gainzString")
     }
 }
