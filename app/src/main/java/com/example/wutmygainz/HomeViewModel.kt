@@ -1,6 +1,8 @@
 package com.example.wutmygainz
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +12,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.N)
 class HomeViewModel : ViewModel() {
 
     private val viewModelJob = Job()
@@ -46,7 +49,6 @@ class HomeViewModel : ViewModel() {
     init {
         _currencyPair.value = "BTC-USD"
         getDateCalendar()
-        getCoinPrices()
     }
 
     private fun getCoinPrices() {
@@ -84,9 +86,10 @@ class HomeViewModel : ViewModel() {
         startMonth = currentDate.get(Calendar.MONTH)
         startDay = currentDate.get(Calendar.DAY_OF_MONTH)
         currentDate.set(startYear, startMonth, startDay)
-        val formatterDate = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         _selectedDate.value = formatterDate.format(currentDate.time)
         Log.i("CheckHomeViewModel", "$startYear $startMonth $startDay")
+        getCoinPrices()
     }
     fun pickedDate(year: Int, month: Int, day: Int) {
         val pickDate = Calendar.getInstance()
@@ -95,13 +98,19 @@ class HomeViewModel : ViewModel() {
         pickDay = day
         pickDate.set(pickYear, pickMonth, pickDay)
         // format Date
-        val formatterDate = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         _selectedDate.value = formatterDate.format(pickDate.time)
+        getCoinPrices()
     }
     private fun calculateTheGainz(current: Double?, historic: Double?) {
-        val gainzInt = (current?.div(historic!!))?.times(100)
+        val difference = current?.minus(historic!!)
+        val gainzInt = (difference?.div(historic!!))?.times(100)
         val gainzString = String.format("%.2f", gainzInt)
-        _theGainz.value = gainzString
-        Log.i("CheckHomeViewModel", "$gainzString")
+        if (difference!! > 0) {
+            _theGainz.value = "+$gainzString"
+        } else {
+            _theGainz.value = gainzString
+        }
+        Log.i("CheckHomeViewModel", "$$gainzString")
     }
 }
