@@ -24,7 +24,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_med"
-            app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/historic_price_text_layout">
@@ -60,15 +60,15 @@
                 android:enabled="false"
                 android:gravity="center"
                 android:hint="@string/current_price_text"
-                android:textColor="@color/black"
                 android:text="@{String.format(@string/current_price, viewModelHome.currentPrice)}"
+                android:textColor="@color/black"
                 android:textSize="@dimen/crypto_price_text_size" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/gainz_group"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
@@ -98,7 +98,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/gainz_currency_text"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_box_outline_c"
                 android:backgroundTint="@color/purple_500"
@@ -108,7 +108,9 @@
                 android:text="@{String.format(@string/currency_gainz, viewModelHome.theGainzCurrency)}"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/gainz_text_medium"/>
+                android:textSize="@dimen/gainz_text_medium"
+                app:layout_constraintEnd_toEndOf="@id/gainz_percent_text"
+                app:layout_constraintStart_toStartOf="@id/gainz_percent_text" />
 
         </LinearLayout>
 
@@ -136,6 +138,8 @@
                     android:id="@+id/invested_cost_input_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
                     android:textSize="@dimen/input_text_size"
                     android:textStyle="bold" />
 
@@ -167,13 +171,14 @@
                 android:id="@+id/date_picker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
                 android:hint="Purchase Date"
+                android:focusable="false"
                 android:onClick="@{() -> fragmentHome.datePickerDialog()}"
                 android:text="@{viewModelHome.selectedDate}"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="@dimen/input_text_size"/>
+                android:textSize="@dimen/input_text_size"
+                android:textStyle="bold" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -192,7 +197,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:text=""
+                android:text="@{viewModelHome.currencyPair}"
                 android:textSize="@dimen/input_text_size"
                 android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>

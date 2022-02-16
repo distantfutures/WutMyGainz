@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -46,6 +47,17 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         //binding.datePicker.setOnClickListener{datePickerDialog()}
+
+        binding.investedCostInputText.setOnEditorActionListener { _, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    val investedCostLong = binding.investedCostInputText.text.toString().toDoubleOrNull()
+                    homeViewModel.onSetInvestedAmount(investedCostLong)
+                    false
+                }
+                else -> { true }
+            }
+        }
 
         binding.currencyPairsTextView.setOnItemClickListener { parent, view, position, l ->
             val selectedPairs = parent.getItemAtPosition(position).toString()

@@ -38,9 +38,13 @@ class HomeViewModel : ViewModel() {
     val theGainzPercent: LiveData<String>
         get() = _theGainzPercent
 
-    private var _theGainzCurrency = MutableLiveData<String?>()
-    val theGainzCurrency: LiveData<String?>
+    private var _theGainzCurrency = MutableLiveData<Double?>()
+    val theGainzCurrency: LiveData<Double?>
         get() = _theGainzCurrency
+
+    private var _investedCost = MutableLiveData<Double?>()
+    val investedCost: LiveData<Double?>
+        get() = _investedCost
 
     var startYear = 0
     var startMonth = 0
@@ -52,6 +56,7 @@ class HomeViewModel : ViewModel() {
 
     init {
         _currencyPair.value = "BTC-USD"
+        _theGainzCurrency.value = 0.00
         getDateCalendar()
     }
 
@@ -75,6 +80,19 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    fun onSetInvestedAmount(cost: Double?) {
+        _investedCost.value = cost
+        val currencyGainz = cost?.let { (_theGainzPercent.value?.toDouble()?.div(100))?.times(it) }
+        if (cost == null) {
+            _theGainzCurrency.value = 0.00
+        } else {
+            val gainzString = String.format("%.2f", currencyGainz).toDouble()
+            // Add format with commas. Change to strings?
+            _theGainzCurrency.value = gainzString
+        }
+        Log.i("CheckSelectedPairs", "${_investedCost.value}")
+    }
+
     fun onSetSelectedPairs(pairs: String) {
         _currencyPair.value = pairs
         getCoinPrices()
@@ -94,6 +112,7 @@ class HomeViewModel : ViewModel() {
         _selectedDate.value = formatterDate.format(currentDate.time)
         Log.i("CheckHomeViewModel", "$startYear $startMonth $startDay")
         getCoinPrices()
+        onSetInvestedAmount(_investedCost.value)
     }
     fun pickedDate(year: Int, month: Int, day: Int) {
         val pickDate = Calendar.getInstance()
@@ -108,8 +127,8 @@ class HomeViewModel : ViewModel() {
     }
     private fun calculateTheGainz(current: Double?, historic: Double?) {
         val difference = current?.minus(historic!!)
-        val gainzInt = (difference?.div(historic!!))?.times(100)
-        val gainzString = String.format("%.2f", gainzInt)
+        val gainzIntPercent = (difference?.div(historic!!))?.times(100)
+        val gainzString = String.format("%.2f", gainzIntPercent)
         if (difference!! > 0) {
             _theGainzPercent.value = "+$gainzString"
         } else {

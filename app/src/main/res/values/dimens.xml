@@ -6,7 +6,7 @@
     <dimen name="input_text_size">24sp</dimen>
     <dimen name="button_text_size">18sp</dimen>
     <dimen name="gainz_text_large">50sp</dimen>
-    <dimen name="gainz_text_medium">24sp</dimen>
+    <dimen name="gainz_text_medium">30sp</dimen>
     <dimen name="gainz_text_small">12sp</dimen>
     <dimen name="padding_med">24dp</dimen>
     <dimen name="padding_small">12dp</dimen>
