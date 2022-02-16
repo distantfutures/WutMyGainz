@@ -1,6 +1,5 @@
 package com.example.wutmygainz
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
@@ -15,9 +14,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.wutmygainz.databinding.FragmentHomeBinding
-import kotlinx.coroutines.*
-import kotlinx.coroutines.NonDisposableHandle.parent
-import java.util.*
 
 class HomeFragment : Fragment() {
 

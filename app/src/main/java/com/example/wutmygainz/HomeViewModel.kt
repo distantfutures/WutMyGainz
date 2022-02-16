@@ -34,9 +34,13 @@ class HomeViewModel : ViewModel() {
     val currencyPair: LiveData<String>
         get() = _currencyPair
 
-    private var _theGainz = MutableLiveData<String>()
-    val theGainz: LiveData<String>
-        get() = _theGainz
+    private var _theGainzPercent = MutableLiveData<String>()
+    val theGainzPercent: LiveData<String>
+        get() = _theGainzPercent
+
+    private var _theGainzCurrency = MutableLiveData<String?>()
+    val theGainzCurrency: LiveData<String?>
+        get() = _theGainzCurrency
 
     var startYear = 0
     var startMonth = 0
@@ -107,9 +111,9 @@ class HomeViewModel : ViewModel() {
         val gainzInt = (difference?.div(historic!!))?.times(100)
         val gainzString = String.format("%.2f", gainzInt)
         if (difference!! > 0) {
-            _theGainz.value = "+$gainzString"
+            _theGainzPercent.value = "+$gainzString"
         } else {
-            _theGainz.value = gainzString
+            _theGainzPercent.value = gainzString
         }
         Log.i("CheckHomeViewModel", "$$gainzString")
     }
