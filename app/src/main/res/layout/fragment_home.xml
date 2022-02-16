@@ -15,22 +15,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_med">
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/historic_price_text"
+            android:id="@+id/historic_price_text_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_med"
             app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/historic_price"
+                android:id="@+id/historic_price_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
@@ -38,24 +38,23 @@
                 android:hint="@string/historic_price_text"
                 android:text="@{String.format(@string/historic_price, viewModelHome.historicPrice)}"
                 android:textColor="@color/black"
-                android:textSize="@dimen/crypto_price_text_size"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="@dimen/crypto_price_text_size" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/current_price_text"
+            android:id="@+id/current_price_text_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_med"
+            android:layout_marginTop="@dimen/margin_med"
             app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/historic_price_text" >
+            app:layout_constraintTop_toBottomOf="@+id/historic_price_text_layout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/current_price"
+                android:id="@+id/current_price_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
@@ -63,53 +62,64 @@
                 android:hint="@string/current_price_text"
                 android:textColor="@color/black"
                 android:text="@{String.format(@string/current_price, viewModelHome.currentPrice)}"
-                android:textSize="@dimen/crypto_price_text_size"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="@dimen/crypto_price_text_size" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gainz_percent_text"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/gainz_group"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_box_outline_c"
-            android:backgroundTint="@color/purple_500"
-            android:clickable="true"
-            android:inputType="datetime"
-            android:padding="@dimen/padding_med"
-            android:layout_margin="@dimen/margin_med"
-            android:text="@{String.format(@string/percent_gainz, viewModelHome.theGainzPercent)}"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/gainz_text_large"
-            app:layout_constraintBottom_toTopOf="@+id/gainz_currency_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current_price_text" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gainz_currency_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_box_outline_c"
-            android:backgroundTint="@color/purple_500"
-            android:clickable="true"
-            android:inputType="datetime"
-            android:padding="@dimen/padding_med"
-            android:text="@{String.format(@string/currency_gainz, viewModelHome.theGainzCurrency)}"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/gainz_text_small"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/current_price_text_layout"
             app:layout_constraintBottom_toTopOf="@+id/invested_cost_group"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" >
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/gainz_percent_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_med"
+                android:background="@drawable/rounded_box_outline_c"
+                android:backgroundTint="@color/purple_500"
+                android:clickable="true"
+                android:inputType="datetime"
+                android:padding="@dimen/padding_med"
+                android:text="@{String.format(@string/percent_gainz, viewModelHome.theGainzPercent)}"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/gainz_text_large"
+                app:layout_constraintBottom_toTopOf="@+id/gainz_currency_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/current_price_text_layout" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/gainz_currency_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_box_outline_c"
+                android:backgroundTint="@color/purple_500"
+                android:clickable="true"
+                android:inputType="datetime"
+                android:padding="@dimen/padding_small"
+                android:text="@{String.format(@string/currency_gainz, viewModelHome.theGainzCurrency)}"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/gainz_text_medium"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/invested_cost_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@id/date_picker"
+            android:layout_marginBottom="@dimen/margin_med"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/date_picker_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -118,70 +128,73 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:layout_marginTop="@dimen/margin_med"
-                android:layout_marginBottom="@dimen/margin_med"
-                android:layout_marginStart="@dimen/margin_med"
-                android:hint="Invested Amount?">
+                android:layout_weight="2.25"
+                android:hint="Invested Amount?"
+                android:weightSum="3" >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/invested_cost_input_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="none"
                     android:textSize="@dimen/input_text_size"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:id="@+id/button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/margin_med"
                 android:layout_weight=".75"
+                android:layout_marginStart="@dimen/margin_med"
+                android:layout_marginTop="3dp"
                 android:text="ADD"
                 android:textSize="@dimen/button_text_size" />
         </LinearLayout>
 
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/date_picker"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:id="@+id/date_picker_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_med"
-            android:background="@drawable/rounded_box_outline_a"
-            android:clickable="true"
-            android:hint="Purchase Date"
-            android:onClick="@{() -> fragmentHome.datePickerDialog()}"
-            android:padding="12dp"
-            android:text="@{viewModelHome.selectedDate}"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="@dimen/input_text_size"
-            app:layout_constraintBottom_toTopOf="@+id/currency_pair_text"
+            android:layout_marginBottom="@dimen/margin_med"
+            app:layout_constraintBottom_toTopOf="@+id/currency_pair_layout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:hint="Purchase Date"
+                android:onClick="@{() -> fragmentHome.datePickerDialog()}"
+                android:text="@{viewModelHome.selectedDate}"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/input_text_size"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/currency_pair_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:id="@+id/currency_pair_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_med"
-            android:paddingEnd="@dimen/padding_med"
-            android:paddingBottom="@dimen/padding_med"
             android:hint="Currency Pairs"
-            app:layout_constraintBottom_toBottomOf="parent" >
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <AutoCompleteTextView
-                android:id="@+id/currency_pairs"
+                android:id="@+id/currency_pairs_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:text=""
                 android:textSize="@dimen/input_text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

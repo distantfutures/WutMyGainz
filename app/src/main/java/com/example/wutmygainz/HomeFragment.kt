@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
         super.onResume()
         val currencyPairs = resources.getStringArray(R.array.currency_pairs)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_currency_pair, currencyPairs)
-        binding.currencyPairs.setAdapter(arrayAdapter)
+        binding.currencyPairsTextView.setAdapter(arrayAdapter)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
 
         //binding.datePicker.setOnClickListener{datePickerDialog()}
 
-        binding.currencyPairs.setOnItemClickListener { parent, view, position, l ->
+        binding.currencyPairsTextView.setOnItemClickListener { parent, view, position, l ->
             val selectedPairs = parent.getItemAtPosition(position).toString()
             Log.i("CheckHomeFrag", "ClickTest $selectedPairs")
             homeViewModel.onSetSelectedPairs(selectedPairs)
