@@ -42,9 +42,9 @@ class HomeViewModel : ViewModel() {
     val theGainzCurrency: LiveData<Double?>
         get() = _theGainzCurrency
 
-    private var _investedCost = MutableLiveData<Double?>()
-    val investedCost: LiveData<Double?>
-        get() = _investedCost
+    private var _investedAmount = MutableLiveData<Double?>()
+    val investedAmount: LiveData<Double?>
+        get() = _investedAmount
 
     var startYear = 0
     var startMonth = 0
@@ -55,9 +55,13 @@ class HomeViewModel : ViewModel() {
     var pickDay = 0
 
     init {
+        _currentPrice.value = "00.00"
+        _historicPrice.value = "00.00"
+        _theGainzPercent.value = "00.00"
         _currencyPair.value = "BTC-USD"
         _theGainzCurrency.value = 0.00
         getDateCalendar()
+        Log.i("CheckViewModel", "Initialized!")
     }
 
     private fun getCoinPrices() {
@@ -68,11 +72,11 @@ class HomeViewModel : ViewModel() {
             if (responseHistoric.isSuccessful) {
                 val historicDouble = responseHistoric.body()?.data?.amount
                 _historicPrice.value = historicDouble?.currencyFormat()
-                Log.i("CheckAPI Service", "Historic: ${responseHistoric.body()?.data?.amount}")
+                Log.i("CheckViewModel", "API SERVICE - Historic: ${responseHistoric.body()?.data?.amount}")
 
                 val currentDouble = responseSpot.body()?.data?.amount
                 _currentPrice.value = currentDouble?.currencyFormat()
-                Log.i("CheckAPI Service", "Current: ${responseSpot.body()?.data?.amount}")
+                Log.i("CheckViewModel", "API SERVICE - Current: ${responseSpot.body()?.data?.amount}")
                 calculateTheGainz(currentDouble, historicDouble)
             } else {
                 Log.i("CheckAPI Service", "Failed!")
@@ -80,28 +84,6 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun onSetInvestedAmount(cost: Double?) {
-        _investedCost.value = cost
-        val currencyGainz = cost?.let { (_theGainzPercent.value?.toDouble()?.div(100))?.times(it) }
-        if (cost == null) {
-            _theGainzCurrency.value = 0.00
-        } else {
-            val gainzString = String.format("%.2f", currencyGainz).toDouble()
-            // Add format with commas. Change to strings?
-            _theGainzCurrency.value = gainzString
-        }
-        Log.i("CheckSelectedPairs", "${_investedCost.value}")
-    }
-
-    fun onSetSelectedPairs(pairs: String) {
-        _currencyPair.value = pairs
-        getCoinPrices()
-        Log.i("CheckSelectedPairs", "${_currencyPair.value}")
-    }
-    private fun Double.currencyFormat(): String {
-        val decimalFormat = DecimalFormat("#,###,##0.00")
-        return decimalFormat.format(this).toString()
-    }
     private fun getDateCalendar() {
         val currentDate = Calendar.getInstance()
         startYear = currentDate.get(Calendar.YEAR)
@@ -110,9 +92,37 @@ class HomeViewModel : ViewModel() {
         currentDate.set(startYear, startMonth, startDay)
         val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         _selectedDate.value = formatterDate.format(currentDate.time)
-        Log.i("CheckHomeViewModel", "$startYear $startMonth $startDay")
+        Log.i("CheckViewModel", "Initial Date: $startYear $startMonth $startDay")
         getCoinPrices()
-        onSetInvestedAmount(_investedCost.value)
+    }
+
+    fun onSetInvestedAmount(cost: Double?) {
+        _investedAmount.value = cost
+        val currencyGainz = cost?.let { (_theGainzPercent.value?.toDouble()?.div(100))?.times(it) }
+        if (cost == null) {
+            _theGainzCurrency.value = 0.00
+            Log.i("CheckViewModel", "NULL SetInvested Amount: ${_investedAmount.value}")
+        } else {
+            // Add format with commas. Change to strings?
+            _theGainzCurrency.value = currencyGainz
+            Log.i("CheckViewModel", "SetInvested Amount: ${_investedAmount.value}")
+        }
+    }
+    suspend fun refreshGainz() {
+        delay(1000)
+        // Needs to wait for new API CALL
+        onSetInvestedAmount(_investedAmount.value)
+        Log.i("CheckViewModel", " Refresh: ${_investedAmount.value}")
+    }
+
+    fun onSetSelectedPairs(pairs: String) {
+        _currencyPair.value = pairs
+        getCoinPrices()
+        Log.i("CheckViewModel", "Selected Pairs: ${_currencyPair.value}")
+    }
+    private fun Double.currencyFormat(): String {
+        val decimalFormat = DecimalFormat("#,###,##0.00")
+        return decimalFormat.format(this)
     }
     fun pickedDate(year: Int, month: Int, day: Int) {
         val pickDate = Calendar.getInstance()
@@ -124,6 +134,10 @@ class HomeViewModel : ViewModel() {
         val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         _selectedDate.value = formatterDate.format(pickDate.time)
         getCoinPrices()
+        coroutineScope.launch {
+            val refresh = async { refreshGainz() }
+            refresh.await()
+        }
     }
     private fun calculateTheGainz(current: Double?, historic: Double?) {
         val difference = current?.minus(historic!!)
@@ -134,6 +148,6 @@ class HomeViewModel : ViewModel() {
         } else {
             _theGainzPercent.value = gainzString
         }
-        Log.i("CheckHomeViewModel", "$$gainzString")
+        Log.i("CheckViewModel", "Gainz Percentage: $$gainzString")
     }
 }

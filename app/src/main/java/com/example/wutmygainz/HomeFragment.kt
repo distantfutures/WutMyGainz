@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.wutmygainz.databinding.FragmentHomeBinding
 
@@ -46,7 +47,9 @@ class HomeFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        //binding.datePicker.setOnClickListener{datePickerDialog()}
+//        homeViewModel.selectedDate.observe(viewLifecycleOwner, {
+//            homeViewModel.refreshGainz()
+//        })
 
         binding.investedCostInputText.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {

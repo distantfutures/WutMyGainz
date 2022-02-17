@@ -5,7 +5,8 @@
     <string name="historic_price">$%s</string>
     <string name="current_price">$%s</string>
     <string name="percent_gainz">%% %s</string>
-    <string name="currency_gainz">$ %s</string>
+    <string name="currency_gainz">$ %.2f</string>
+    <string name="invested_amount">$ %s</string>
     <string-array name="currency_pairs">
         <item>BTC-USD</item>
         <item>ETH-USD</item>

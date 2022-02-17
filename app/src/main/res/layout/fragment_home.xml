@@ -18,12 +18,12 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_med">
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/historic_price_text_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:cursorVisible="false"
             app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,11 +33,10 @@
                 android:id="@+id/historic_price_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:focusable="false"
                 android:gravity="center"
                 android:hint="@string/historic_price_text"
                 android:text="@{String.format(@string/historic_price, viewModelHome.historicPrice)}"
-                android:textColor="@color/black"
                 android:textSize="@dimen/crypto_price_text_size" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -57,11 +56,11 @@
                 android:id="@+id/current_price_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:cursorVisible="false"
+                android:focusable="false"
                 android:gravity="center"
                 android:hint="@string/current_price_text"
                 android:text="@{String.format(@string/current_price, viewModelHome.currentPrice)}"
-                android:textColor="@color/black"
                 android:textSize="@dimen/crypto_price_text_size" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -102,8 +101,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_box_outline_c"
                 android:backgroundTint="@color/purple_500"
-                android:clickable="true"
-                android:inputType="datetime"
                 android:padding="@dimen/padding_small"
                 android:text="@{String.format(@string/currency_gainz, viewModelHome.theGainzCurrency)}"
                 android:textAlignment="center"
@@ -176,7 +173,6 @@
                 android:onClick="@{() -> fragmentHome.datePickerDialog()}"
                 android:text="@{viewModelHome.selectedDate}"
                 android:textAlignment="center"
-                android:textColor="@color/black"
                 android:textSize="@dimen/input_text_size"
                 android:textStyle="bold" />
 
