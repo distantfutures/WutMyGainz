@@ -1,4 +1,4 @@
-package com.example.wutmygainz
+package com.example.wutmygainz.home
 
 import android.app.DatePickerDialog
 import android.os.Build
@@ -13,8 +13,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.wutmygainz.R
 import com.example.wutmygainz.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -29,7 +29,8 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val currencyPairs = resources.getStringArray(R.array.currency_pairs)
-        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_currency_pair, currencyPairs)
+        val arrayAdapter = ArrayAdapter(requireContext(),
+            R.layout.dropdown_currency_pair, currencyPairs)
         binding.currencyPairsTextView.setAdapter(arrayAdapter)
     }
 

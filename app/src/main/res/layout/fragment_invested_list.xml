@@ -4,12 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InvestedListFragment">
+    tools:context=".investedlist.InvestedListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/invested_list_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/invested_list_item"/>
 
 </FrameLayout>

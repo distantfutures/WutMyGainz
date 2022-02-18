@@ -2,15 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".HomeFragment">
+    tools:context=".home.HomeFragment">
 
     <data>
         <variable
             name="viewModelHome"
-            type="com.example.wutmygainz.HomeViewModel" />
+            type="com.example.wutmygainz.home.HomeViewModel" />
         <variable
             name="fragmentHome"
-            type="com.example.wutmygainz.HomeFragment" />
+            type="com.example.wutmygainz.home.HomeFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,4 +1,4 @@
-package com.example.wutmygainz
+package com.example.wutmygainz.home
 
 import android.os.Build
 import android.util.Log
