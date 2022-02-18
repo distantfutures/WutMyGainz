@@ -42,9 +42,9 @@ class HomeViewModel : ViewModel() {
     val theGainzCurrency: LiveData<Double?>
         get() = _theGainzCurrency
 
-    private var _investedAmount = MutableLiveData<Double?>()
-    val investedAmount: LiveData<Double?>
-        get() = _investedAmount
+    private var _investedPrice = MutableLiveData<Double?>()
+    val investedPrice: LiveData<Double?>
+        get() = _investedPrice
 
     var startYear = 0
     var startMonth = 0
@@ -97,22 +97,22 @@ class HomeViewModel : ViewModel() {
     }
 
     fun onSetInvestedAmount(cost: Double?) {
-        _investedAmount.value = cost
+        _investedPrice.value = cost
         val currencyGainz = cost?.let { (_theGainzPercent.value?.toDouble()?.div(100))?.times(it) }
         if (cost == null) {
             _theGainzCurrency.value = 0.00
-            Log.i("CheckViewModel", "NULL SetInvested Amount: ${_investedAmount.value}")
+            Log.i("CheckViewModel", "NULL SetInvested Amount: ${_investedPrice.value}")
         } else {
             // Add format with commas. Change to strings?
             _theGainzCurrency.value = currencyGainz
-            Log.i("CheckViewModel", "SetInvested Amount: ${_investedAmount.value}")
+            Log.i("CheckViewModel", "SetInvested Amount: ${_investedPrice.value}")
         }
     }
     suspend fun refreshGainz() {
         delay(1000)
         // Needs to wait for new API CALL
-        onSetInvestedAmount(_investedAmount.value)
-        Log.i("CheckViewModel", " Refresh: ${_investedAmount.value}")
+        onSetInvestedAmount(_investedPrice.value)
+        Log.i("CheckViewModel", " Refresh: ${_investedPrice.value}")
     }
 
     fun onSetSelectedPairs(pairs: String) {
