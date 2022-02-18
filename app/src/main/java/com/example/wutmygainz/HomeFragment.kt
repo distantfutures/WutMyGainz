@@ -47,10 +47,6 @@ class HomeFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-//        homeViewModel.selectedDate.observe(viewLifecycleOwner, {
-//            homeViewModel.refreshGainz()
-//        })
-
         binding.investedCostInputText.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
