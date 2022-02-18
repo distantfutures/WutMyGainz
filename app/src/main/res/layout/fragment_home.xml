@@ -82,8 +82,6 @@
                 android:layout_marginBottom="@dimen/margin_med"
                 android:background="@drawable/rounded_box_outline_c"
                 android:backgroundTint="@color/purple_500"
-                android:clickable="true"
-                android:inputType="datetime"
                 android:padding="@dimen/padding_med"
                 android:text="@{String.format(@string/percent_gainz, viewModelHome.theGainzPercent)}"
                 android:textAlignment="center"
