@@ -13,6 +13,7 @@ class InvestedListAdapter: androidx.recyclerview.widget.ListAdapter<Investments,
         fun bind(
             item: Investments
         ) {
+            // Binds Investments Data Class to Data Binding in RecyclerView
             binding.investments = item
             binding.executePendingBindings()
         }

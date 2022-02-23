@@ -54,6 +54,9 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
     val investedPrice: LiveData<Double?>
         get() = _investedPrice
 
+    // Calls database to get Room Database into listData attribute in RecyclerView
+    val getAllInvestments = database.getAllInvestments()
+
     var startYear = 0
     var startMonth = 0
     var startDay = 0

@@ -7,6 +7,9 @@
         <variable
             name="investments"
             type="com.example.wutmygainz.database.Investments" />
+        <variable
+            name="viewModel"
+            type="com.example.wutmygainz.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/gainz_text_small"
-                android:text="Currency Pair"
+                android:text="@{investments.currencyPair}"
                 android:layout_margin="@dimen/margin_small"/>
 
             <com.google.android.material.textview.MaterialTextView
@@ -74,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_extra_small"
-                android:text="Purchase Price: $2379.36"
+                android:text="@{String.format(@string/invested_amount, investments.investedPrice)}"
                 android:textAlignment="center"
                 android:textSize="@dimen/gainz_text_small" />
 
@@ -83,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_extra_small"
-                android:text="Purchased On: 11-14-21"
+                android:text="Purchase Date: "
                 android:textAlignment="center"
                 android:textSize="@dimen/gainz_text_small" />
 
