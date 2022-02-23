@@ -7,6 +7,8 @@
     <string name="percent_gainz">%% %s</string>
     <string name="currency_gainz">$ %.2f</string>
     <string name="invested_amount">$ %s</string>
+    <string name="purchase_price">Purchase Price: $ %s</string>
+    <string name="purchase_date">Purchase Date: %s</string>
     <string-array name="currency_pairs">
         <item>BTC-USD</item>
         <item>ETH-USD</item>

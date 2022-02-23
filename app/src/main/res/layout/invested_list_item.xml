@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_margin="@dimen/margin_med"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -77,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_extra_small"
-                android:text="@{String.format(@string/invested_amount, investments.investedPrice)}"
+                android:text="@{String.format(@string/purchase_price, investments.investedPrice)}"
                 android:textAlignment="center"
                 android:textSize="@dimen/gainz_text_small" />
 
@@ -86,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_extra_small"
-                android:text="Purchase Date: "
+                android:text="@{String.format(@string/purchase_date, investments.purchaseDate)}"
                 android:textAlignment="center"
                 android:textSize="@dimen/gainz_text_small" />
 
