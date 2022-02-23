@@ -148,7 +148,8 @@
                 android:layout_marginStart="@dimen/margin_med"
                 android:layout_marginTop="3dp"
                 android:text="ADD"
-                android:textSize="@dimen/button_text_size" />
+                android:textSize="@dimen/button_text_size"
+                android:onClick="@{() -> viewModelHome.trackInvestments()}"/>
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout

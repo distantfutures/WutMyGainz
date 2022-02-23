@@ -10,7 +10,7 @@ abstract class InvestmentsDatabase: RoomDatabase() {
     abstract val investmentDatabaseDao: InvestmentsDatabaseDAO
 
     companion object {
-
+        @Volatile
         private var INSTANCE: InvestmentsDatabase? = null
 
         fun getInstance(context: Context): InvestmentsDatabase {

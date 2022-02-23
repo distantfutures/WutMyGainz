@@ -15,6 +15,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.wutmygainz.R
+import com.example.wutmygainz.database.InvestmentsDatabase
+import com.example.wutmygainz.database.InvestmentsDatabaseDAO
 import com.example.wutmygainz.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -22,9 +24,10 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val homeViewModel: HomeViewModel by lazy {
-        ViewModelProvider(this).get(HomeViewModel::class.java)
-    }
+//    private val homeViewModel: HomeViewModel by lazy {
+//        ViewModelProvider(this).get(HomeViewModel::class.java)
+//    }
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onResume() {
         super.onResume()
@@ -41,6 +44,14 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+
+        val application = requireNotNull(this.activity).application
+
+        val datasource = InvestmentsDatabase.getInstance(application).investmentDatabaseDao
+
+        val viewModelFactory = HomeViewModelFactory(datasource)
+
+        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
         binding.viewModelHome = homeViewModel
 
