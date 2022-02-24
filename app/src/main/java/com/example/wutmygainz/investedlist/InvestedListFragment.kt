@@ -1,6 +1,7 @@
 package com.example.wutmygainz.investedlist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,8 @@ import com.example.wutmygainz.home.HomeViewModelFactory
 class InvestedListFragment : Fragment() {
 
 //    private val sharedViewModel: HomeViewModel by activityViewModels()
-
+    private var _binding: FragmentInvestedListBinding? = null
+    private val binding get() = _binding!!
     private lateinit var sharedViewModel: HomeViewModel
 
     override fun onCreateView(
@@ -25,7 +27,7 @@ class InvestedListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding: FragmentInvestedListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_invested_list, container, false)
+        _binding = FragmentInvestedListBinding.inflate(inflater, container, false)
 
         val application = requireNotNull(this.activity).application
 
@@ -33,7 +35,7 @@ class InvestedListFragment : Fragment() {
 
         val viewModelFactory = HomeViewModelFactory(datasource)
 
-        sharedViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+        sharedViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
 
         binding.lifecycleOwner = this
 
@@ -42,11 +44,12 @@ class InvestedListFragment : Fragment() {
         binding.investedFragment = this
 
         // Initializes List Adapter
-        val adapter = InvestedListAdapter()
+        val adapter = InvestedListAdapter(sharedViewModel)
 
         // Bind adapter to RecyclerView
         binding.investedListRecycler.adapter = adapter
 
+        Log.i("CheckListFragment", "Current Price? ${sharedViewModel.theCurrentPrice}")
         return binding.root
     }
 

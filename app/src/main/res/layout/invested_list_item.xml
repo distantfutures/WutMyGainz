@@ -32,8 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/gainz_text_small"
-                android:text="@{investments.currencyPair}"
-                android:layout_margin="@dimen/margin_small"/>
+                android:hint="BTC-USD"
+                android:text="@{investments.currencyPair}"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/gainz_percent_text"
@@ -42,12 +42,12 @@
                 android:background="@drawable/rounded_box_outline_c"
                 android:backgroundTint="@color/purple_500"
                 android:padding="@dimen/padding_small"
-                android:text="%+30.23"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/gainz_text_medium"
-                tools:layout_editor_absoluteX="31dp"
-                tools:layout_editor_absoluteY="121dp" />
+                android:hint="%+36.98"
+                app:currentPrice="@{viewModel.theCurrentPrice}"
+                app:historicPrice="@{investments.historicPrice}"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/currency_price_group"
@@ -61,33 +61,44 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/current_currency_value_text"
+                android:id="@+id/investment_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_extra_small"
-                android:text="Current Value: $4287.08"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textSize="@dimen/gainz_text_small"
-                tools:layout_editor_absoluteX="31dp"
-                tools:layout_editor_absoluteY="121dp" />
+                android:hint="Here is a bunch of data that doesn't matter"
+                app:investments="@{investments}"
+                app:currentPrice="@{viewModel.theCurrentPrice}"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/purchase_price_currency_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_extra_small"
-                android:text="@{String.format(@string/purchase_price, investments.investedPrice)}"
-                android:textAlignment="center"
-                android:textSize="@dimen/gainz_text_small" />
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/current_currency_value_text"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="@dimen/padding_extra_small"-->
+<!--                android:text="Current Value: $4287.08"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textSize="@dimen/gainz_text_small"-->
+<!--                tools:layout_editor_absoluteX="31dp"-->
+<!--                tools:layout_editor_absoluteY="121dp" />-->
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/purchase_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_extra_small"
-                android:text="@{String.format(@string/purchase_date, investments.purchaseDate)}"
-                android:textAlignment="center"
-                android:textSize="@dimen/gainz_text_small" />
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/purchase_price_currency_text"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="@dimen/padding_extra_small"-->
+<!--                android:text="@{String.format(@string/purchase_price, investments.investedPrice)}"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textSize="@dimen/gainz_text_small" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/purchase_date_text"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="@dimen/padding_extra_small"-->
+<!--                android:text="@{String.format(@string/purchase_date, investments.purchaseDate)}"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textSize="@dimen/gainz_text_small" />-->
 
         </LinearLayout>
 

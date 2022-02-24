@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.wutmygainz.R
 import com.example.wutmygainz.database.InvestmentsDatabase
@@ -29,6 +30,27 @@ class HomeFragment : Fragment() {
 //    }
     private lateinit var homeViewModel: HomeViewModel
 
+    override fun onDestroy() {
+        Log.i("CheckHomeFragment", "Fragment Destroyed!")
+        super.onDestroy()
+    }
+
+    override fun onPause() {
+        Log.i("CheckHomeFragment", "Fragment Paused!")
+        Log.i("CheckHomeFragment", "Pre-Binding Test ${homeViewModel.theCurrentPrice}")
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        Log.i("CheckHomeFragment", "Fragment Destroy View!")
+        super.onDestroyView()
+    }
+
+    override fun onStop() {
+        Log.i("CheckHomeFragment", "Fragment Stopped!")
+        super.onStop()
+    }
+
     override fun onResume() {
         super.onResume()
         val currencyPairs = resources.getStringArray(R.array.currency_pairs)
@@ -43,7 +65,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         val application = requireNotNull(this.activity).application
 
@@ -51,7 +73,8 @@ class HomeFragment : Fragment() {
 
         val viewModelFactory = HomeViewModelFactory(datasource)
 
-        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+        // Need to understand why requireActivity() works and "this" doesn't
+        homeViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
 
         binding.viewModelHome = homeViewModel
 

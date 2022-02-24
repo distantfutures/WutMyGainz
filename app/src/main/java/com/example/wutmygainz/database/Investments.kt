@@ -20,7 +20,4 @@ data class Investments(
 
     @ColumnInfo(name = "historic_price")
     var historicPrice : Double = 0.0,
-
-    @ColumnInfo(name = "current_price")
-    var currentPrice : Double = 0.0,
 )

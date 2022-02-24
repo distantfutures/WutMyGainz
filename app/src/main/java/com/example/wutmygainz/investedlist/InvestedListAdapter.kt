@@ -3,18 +3,22 @@ package com.example.wutmygainz.investedlist
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wutmygainz.database.Investments
 import com.example.wutmygainz.databinding.InvestedListItemBinding
+import com.example.wutmygainz.home.HomeViewModel
 
-class InvestedListAdapter: androidx.recyclerview.widget.ListAdapter<Investments, InvestedListAdapter.ViewHolder>(DiffCallback) {
+class InvestedListAdapter(private val homeVM: HomeViewModel): androidx.recyclerview.widget.ListAdapter<Investments, InvestedListAdapter.ViewHolder>(DiffCallback) {
     class ViewHolder(private var binding: InvestedListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            item: Investments
+            item: Investments,
+            homeViewModel: HomeViewModel
         ) {
             // Binds Investments Data Class to Data Binding in RecyclerView
             binding.investments = item
+            binding.viewModel = homeViewModel
             binding.executePendingBindings()
         }
     }
@@ -37,6 +41,6 @@ class InvestedListAdapter: androidx.recyclerview.widget.ListAdapter<Investments,
         position: Int
     ) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, homeVM)
     }
 }

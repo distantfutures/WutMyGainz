@@ -56,6 +56,7 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
 
     // Calls database to get Room Database into listData attribute in RecyclerView
     val getAllInvestments = database.getAllInvestments()
+    var theCurrentPrice = ""
 
     var startYear = 0
     var startMonth = 0
@@ -91,7 +92,6 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
         newInvestment.currencyPair = currencyPair.value!!
         newInvestment.investedPrice = investedPrice.value!!
         newInvestment.historicPrice = unformatCurrency(historicPrice.value!!)
-        newInvestment.currentPrice = unformatCurrency(currentPrice.value!!)
         Log.i("CheckHomeViewModel", "gatherInvestmentData: $newInvestment")
         return newInvestment
     }
@@ -115,6 +115,8 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
 
                 val currentDouble = responseSpot.body()?.data?.amount
                 _currentPrice.value = currentDouble?.currencyFormat()
+                theCurrentPrice = currentDouble.toString()
+                Log.i("CheckViewModel", "Pre-Binding Test $theCurrentPrice")
                 Log.i("CheckViewModel", "API SERVICE - Current: ${responseSpot.body()?.data?.amount}")
                 calculateTheGainz(currentDouble, historicDouble)
             } else {
@@ -191,7 +193,7 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
         Log.i("CheckHomeViewModel", "Date in milli: $dateInMilliseconds")
         return dateInMilliseconds.time
     }
-    private fun calculateTheGainz(current: Double?, historic: Double?) {
+    fun calculateTheGainz(current: Double?, historic: Double?) {
         val difference = current?.minus(historic!!)
         val gainzIntPercent = (difference?.div(historic!!))?.times(100)
         val gainzString = String.format("%.2f", gainzIntPercent)
@@ -200,6 +202,17 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
         } else {
             _theGainzPercent.value = gainzString
         }
-        Log.i("CheckViewModel", "Gainz Percentage: $$gainzString")
+        Log.i("CheckViewModel", "Gainz Percent: $gainzString")
+    }
+    fun calculateGainzList(current: String, historic: Double?): String {
+        val currentCurrency = unformatCurrency(current)
+        val difference = currentCurrency.minus(historic!!)
+        val gainzIntPercent = (difference.div(historic)).times(100)
+        Log.i("CheckViewModel", "Gainz List Percent: $gainzIntPercent Current: $currentCurrency Difference: $difference")
+        return if (difference > 0) {
+            String.format("%+.2f", gainzIntPercent)
+        } else {
+            String.format("%.2f", gainzIntPercent)
+        }
     }
 }
