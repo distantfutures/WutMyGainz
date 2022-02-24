@@ -2,7 +2,7 @@
 buildscript {
     ext {
         kotlin_version = '1.6.10'
-        version_navigation = '1.0.0'
+        version_navigation = '2.4.1'
         version_lifecycle = '2.2.0'
         version_fragment = "1.0.0"
     }

@@ -14,7 +14,6 @@ class TabPageAdapter(activity: FragmentActivity, private val tabCount: Int) : Fr
             0 -> HomeFragment()
             1 -> InvestedListFragment()
             else -> HomeFragment()
-
         }
     }
 }

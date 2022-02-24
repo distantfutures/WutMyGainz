@@ -6,17 +6,25 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.wutmygainz.database.Investments
+import com.example.wutmygainz.database.InvestmentsDatabaseDAO
 import com.example.wutmygainz.network.CoinbaseApi
 import kotlinx.coroutines.*
 import java.text.DecimalFormat
+import java.text.Normalizer
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.N)
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() {
 
     private val viewModelJob = Job()
-    val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private var _historicPrice = MutableLiveData<String>()
     val historicPrice: LiveData<String>
@@ -46,6 +54,10 @@ class HomeViewModel : ViewModel() {
     val investedPrice: LiveData<Double?>
         get() = _investedPrice
 
+    // Calls database to get Room Database into listData attribute in RecyclerView
+    val getAllInvestments = database.getAllInvestments()
+    var theCurrentPrice = ""
+
     var startYear = 0
     var startMonth = 0
     var startDay = 0
@@ -63,6 +75,33 @@ class HomeViewModel : ViewModel() {
         getDateCalendar()
         Log.i("CheckViewModel", "Initialized!")
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun trackInvestments() {
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                val gatherData = gatherInvestmentData()
+                insertNewInvestment(gatherData)
+            }
+        }
+    }
+
+
+    private fun gatherInvestmentData(): Investments {
+        val newInvestment = Investments()
+        newInvestment.purchaseDate = formatToMilli(selectedDate.value!!)
+        newInvestment.currencyPair = currencyPair.value!!
+        newInvestment.investedPrice = investedPrice.value!!
+        newInvestment.historicPrice = unformatCurrency(historicPrice.value!!)
+        Log.i("CheckHomeViewModel", "gatherInvestmentData: $newInvestment")
+        return newInvestment
+    }
+    private suspend fun insertNewInvestment(newInvestment: Investments) {
+        withContext(Dispatchers.IO) {
+            database.insertNew(newInvestment)
+            val check = newInvestment
+            Log.i("CheckHomeViewModel", "Room: $check")
+        }
+    }
 
     private fun getCoinPrices() {
         coroutineScope.launch {
@@ -76,6 +115,8 @@ class HomeViewModel : ViewModel() {
 
                 val currentDouble = responseSpot.body()?.data?.amount
                 _currentPrice.value = currentDouble?.currencyFormat()
+                theCurrentPrice = currentDouble.toString()
+                Log.i("CheckViewModel", "Pre-Binding Test $theCurrentPrice")
                 Log.i("CheckViewModel", "API SERVICE - Current: ${responseSpot.body()?.data?.amount}")
                 calculateTheGainz(currentDouble, historicDouble)
             } else {
@@ -124,6 +165,11 @@ class HomeViewModel : ViewModel() {
         val decimalFormat = DecimalFormat("#,###,##0.00")
         return decimalFormat.format(this)
     }
+    private fun unformatCurrency(price: String): Double {
+        val currencyAsDouble = price.replace(",", "")
+        return currencyAsDouble.toDouble()
+    }
+
     fun pickedDate(year: Int, month: Int, day: Int) {
         val pickDate = Calendar.getInstance()
         pickYear = year
@@ -138,8 +184,16 @@ class HomeViewModel : ViewModel() {
             val refresh = async { refreshGainz() }
             refresh.await()
         }
+//        formatToMilli(formatterDate.format(pickDate.time))
     }
-    private fun calculateTheGainz(current: Double?, historic: Double?) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatToMilli(date: String): Long {
+        val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateInMilliseconds = formatterDate.parse(date)
+        Log.i("CheckHomeViewModel", "Date in milli: $dateInMilliseconds")
+        return dateInMilliseconds.time
+    }
+    fun calculateTheGainz(current: Double?, historic: Double?) {
         val difference = current?.minus(historic!!)
         val gainzIntPercent = (difference?.div(historic!!))?.times(100)
         val gainzString = String.format("%.2f", gainzIntPercent)
@@ -148,6 +202,17 @@ class HomeViewModel : ViewModel() {
         } else {
             _theGainzPercent.value = gainzString
         }
-        Log.i("CheckViewModel", "Gainz Percentage: $$gainzString")
+        Log.i("CheckViewModel", "Gainz Percent: $gainzString")
+    }
+    fun calculateGainzList(current: String, historic: Double?): String {
+        val currentCurrency = unformatCurrency(current)
+        val difference = currentCurrency.minus(historic!!)
+        val gainzIntPercent = (difference.div(historic)).times(100)
+        Log.i("CheckViewModel", "Gainz List Percent: $gainzIntPercent Current: $currentCurrency Difference: $difference")
+        return if (difference > 0) {
+            String.format("%+.2f", gainzIntPercent)
+        } else {
+            String.format("%.2f", gainzIntPercent)
+        }
     }
 }
