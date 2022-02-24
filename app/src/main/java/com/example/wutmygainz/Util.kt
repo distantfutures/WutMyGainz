@@ -15,7 +15,7 @@ fun formatInvestments(investments: Investments, currentPrice: String?, resources
     val sb = StringBuilder()
     sb.apply {
         investments.let {
-            append("<br><b>${resources.getString(R.string.purchase_date_text)}</b> ")
+            append("<b>${resources.getString(R.string.purchase_date_text)}</b> ")
             append(formatLongDate(it))
             append("<br><b>${resources.getString(R.string.historic_price_text)}:</b> ")
             append(formatCurrency(it.historicPrice))
@@ -59,11 +59,6 @@ fun calculateGainzPercent(current: String?, historic: Double?): Pair<Double, Dou
     val difference = unformatCurrency(current!!).minus(historic!!)
     val gainzIntPercent = (difference.div(historic)).times(100)
     Log.i("CheckViewModel", "Gainz List Percent: $gainzIntPercent Difference: $difference")
-//    return if (difference > 0) {
-//        String.format("%%+.2f", gainzIntPercent)
-//    } else {
-//        String.format("%%%.2f", gainzIntPercent)
-//    }
     return Pair (gainzIntPercent, difference)
 }
 fun formatPercent(gainzPercent: Double?, difference: Double?): String {

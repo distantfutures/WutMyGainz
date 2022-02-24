@@ -98,6 +98,11 @@ class HomeFragment : Fragment() {
             Log.i("CheckHomeFrag", "ClickTest $selectedPairs")
             homeViewModel.onSetSelectedPairs(selectedPairs)
         }
+        val allCoinPairs = resources.getStringArray(R.array.currency_pairs)
+        for (i in allCoinPairs.indices) {
+            Log.i("StringCheck", allCoinPairs[i])
+            homeViewModel.getAllCoinSpotPrices(allCoinPairs[i])
+        }
         return binding.root
     }
 
