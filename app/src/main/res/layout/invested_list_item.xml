@@ -14,15 +14,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content" >
 
         <LinearLayout
             android:id="@+id/currency_percent_gainz_group"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
+            android:layout_marginTop="@dimen/margin_med"
+            android:layout_marginBottom="@dimen/margin_med"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -46,61 +47,24 @@
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/gainz_text_medium"
                 android:hint="%+36.98"
-                app:currentPrice="@{viewModel.theCurrentPrice}"
-                app:historicPrice="@{investments.historicPrice}"/>
+                app:investments="@{investments}"
+                app:spotPriceMap="@{viewModel.allCurrentPrices}"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/currency_price_group"
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/investment_data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="start"
-            android:layout_margin="@dimen/margin_med"
+            android:layout_marginStart="@dimen/margin_med"
+            android:hint="@string/test_string"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/gainz_text_small"
+            app:spotPriceMapData="@{viewModel.allCurrentPrices}"
+            app:investmentsData="@{investments}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/currency_percent_gainz_group"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/investment_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_extra_small"
-                android:textAlignment="textStart"
-                android:textSize="@dimen/gainz_text_small"
-                android:hint="Here is a bunch of data that doesn't matter"
-                app:investments="@{investments}"
-                app:currentPrice="@{viewModel.theCurrentPrice}"/>
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/current_currency_value_text"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="@dimen/padding_extra_small"-->
-<!--                android:text="Current Value: $4287.08"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textSize="@dimen/gainz_text_small"-->
-<!--                tools:layout_editor_absoluteX="31dp"-->
-<!--                tools:layout_editor_absoluteY="121dp" />-->
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/purchase_price_currency_text"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="@dimen/padding_extra_small"-->
-<!--                android:text="@{String.format(@string/purchase_price, investments.investedPrice)}"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textSize="@dimen/gainz_text_small" />-->
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/purchase_date_text"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="@dimen/padding_extra_small"-->
-<!--                android:text="@{String.format(@string/purchase_date, investments.purchaseDate)}"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textSize="@dimen/gainz_text_small" />-->
-
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -8,7 +8,7 @@
     <dimen name="button_text_size">18sp</dimen>
     <dimen name="gainz_text_large">48sp</dimen>
     <dimen name="gainz_text_medium">24sp</dimen>
-    <dimen name="gainz_text_small">18sp</dimen>
+    <dimen name="gainz_text_small">16sp</dimen>
     <dimen name="gainz_text_extra_small">12sp</dimen>
     <dimen name="padding_med">24dp</dimen>
     <dimen name="padding_small">12dp</dimen>

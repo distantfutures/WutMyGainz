@@ -57,6 +57,7 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
     // Calls database to get Room Database into listData attribute in RecyclerView
     val getAllInvestments = database.getAllInvestments()
     var theCurrentPrice = ""
+    val allCurrentPrices: MutableMap<String, Double> = mutableMapOf()
 
     var startYear = 0
     var startMonth = 0
@@ -98,8 +99,17 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
     private suspend fun insertNewInvestment(newInvestment: Investments) {
         withContext(Dispatchers.IO) {
             database.insertNew(newInvestment)
-            val check = newInvestment
-            Log.i("CheckHomeViewModel", "Room: $check")
+            Log.i("CheckHomeViewModel", "Room: $newInvestment")
+        }
+    }
+    fun getAllCoinSpotPrices(pairs: String) {
+        coroutineScope.launch {
+            val responseSpot = CoinbaseApi.retrofitService.getCurrentCoinPrice(pairs)
+            if (responseSpot.isSuccessful) {
+                val spotPrice = responseSpot.body()?.data?.amount
+                allCurrentPrices.put(pairs, spotPrice!!)
+                Log.i("CheckViewModel", "MAP TEST: $allCurrentPrices")
+            }
         }
     }
 

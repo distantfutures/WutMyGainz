@@ -11,6 +11,7 @@
     <string name="purchase_date_text">Purchase Date: </string>
     <string name="invested_amount_text">Invested Amount: </string>
     <string name="current_value_text">Current Value:</string>
+    <string name="test_string">Here is a bunch of \ndata that doesn\'t \n matter at all. \n Not even a little bit.</string>
     <string-array name="currency_pairs">
         <item>BTC-USD</item>
         <item>ETH-USD</item>

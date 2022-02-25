@@ -22,9 +22,11 @@
             android:id="@+id/invested_list_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_med"
+            android:layout_marginEnd="@dimen/margin_med"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:listData="@{viewModel.getAllInvestments}"
-            tools:listitem="@layout/invested_list_item"/>
+            tools:listitem="@layout/invested_list_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
