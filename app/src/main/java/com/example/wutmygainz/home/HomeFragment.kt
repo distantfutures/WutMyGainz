@@ -98,12 +98,17 @@ class HomeFragment : Fragment() {
             Log.i("CheckHomeFrag", "ClickTest $selectedPairs")
             homeViewModel.onSetSelectedPairs(selectedPairs)
         }
+        getAllSpotPrices()
+        return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getAllSpotPrices() {
         val allCoinPairs = resources.getStringArray(R.array.currency_pairs)
         for (i in allCoinPairs.indices) {
             Log.i("StringCheck", allCoinPairs[i])
             homeViewModel.getAllCoinSpotPrices(allCoinPairs[i])
         }
-        return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -111,6 +116,7 @@ class HomeFragment : Fragment() {
         DatePickerDialog(requireActivity(),  android.R.style.Theme_Material_Dialog, { _, year, month, day ->
             homeViewModel.pickedDate(year, month, day)
             showToastLong(homeViewModel.selectedDate.value)
+            getAllSpotPrices()
         }, homeViewModel.startYear, homeViewModel.startMonth, homeViewModel.startDay).show()
     }
     fun showToastLong(str: String?) {

@@ -47,8 +47,8 @@
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/gainz_text_medium"
                 android:hint="%+36.98"
-                app:currentPrice="@{viewModel.theCurrentPrice}"
-                app:historicPrice="@{investments.historicPrice}"/>
+                app:investments="@{investments}"
+                app:spotPriceMap="@{viewModel.allCurrentPrices}"/>
         </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -59,8 +59,8 @@
             android:hint="@string/test_string"
             android:textAlignment="textStart"
             android:textSize="@dimen/gainz_text_small"
-            app:currentPrice="@{viewModel.theCurrentPrice}"
-            app:investments="@{investments}"
+            app:spotPriceMapData="@{viewModel.allCurrentPrices}"
+            app:investmentsData="@{investments}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/currency_percent_gainz_group"

@@ -25,19 +25,22 @@ fun bindRecyclerView(recycler: RecyclerView, data: List<Investments>?) {
     }
 }
 
-@BindingAdapter(value = ["investments", "currentPrice"])
-fun MaterialTextView.setDataText(investments: Investments?, currentPrice: String?) {
+@BindingAdapter(value = ["investmentsData", "spotPriceMapData"])
+fun MaterialTextView.setDataText(investments: Investments?, spotPriceMap: Map<String, Double>?) {
     investments?.let {
-        text = formatInvestments(investments, currentPrice, context.resources)
+        val spotPrice = spotPriceMap?.get(investments.currencyPair)
+        text = formatInvestments(investments, spotPrice, context.resources)
+        Log.i("CheckBindingAdapter", "SPOT DATA: $spotPrice")
     }
 }
 
-@BindingAdapter(value = ["currentPrice","historicPrice"])
-fun MaterialTextView.setGainzText(currentPrice: String?, historic: Double?) {
-    // Problem not passing in currentPrice. Maybe get destroyed upon swipe
-    currentPrice?.let {
-        Log.i("CheckBindingAdapter", "$currentPrice - $historic")
-        var gainzPercent = calculateGainzPercent(currentPrice, historic!!)
+@BindingAdapter(value = ["investments","spotPriceMap"])
+fun MaterialTextView.setGainzText(investments: Investments?, spotPriceMap: Map<String, Double>?) {
+    spotPriceMap?.let {
+        val historicPrice = investments?.historicPrice
+        val spotPrice = spotPriceMap.get(investments?.currencyPair)
+        val gainzPercent = calculateGainzPercent(historicPrice, spotPrice)
         text = formatPercent(gainzPercent.first, gainzPercent.second)
+        Log.i("CheckBindingAdapter", "SPOT: $spotPrice, HIS: $historicPrice, MAP: $spotPriceMap")
     }
 }

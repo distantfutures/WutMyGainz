@@ -11,7 +11,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun formatInvestments(investments: Investments, currentPrice: String?, resources: Resources): Spanned? {
+fun formatInvestments(investments: Investments, spotPrice: Double?, resources: Resources): Spanned? {
     val sb = StringBuilder()
     sb.apply {
         investments.let {
@@ -22,7 +22,7 @@ fun formatInvestments(investments: Investments, currentPrice: String?, resources
             append("<br><b>${resources.getString(R.string.invested_amount_text)}</b> ")
             append(formatCurrency(it.investedPrice))
             append("<br><b>${resources.getString(R.string.current_value_text)}</b> ")
-            val currentValue = currentValue(currentPrice, it.historicPrice, it.investedPrice)
+            val currentValue = currentValue(spotPrice, it.historicPrice, it.investedPrice)
             append(formatCurrency(currentValue!!))
         }
     }
@@ -44,9 +44,9 @@ fun formatCurrency(investedPrice: Double): String {
     return decimalFormat.format(investedPrice)
 }
 
-fun currentValue(currentPrice: String?, historicPrice: Double, investedPrice: Double?): Double? {
-    var gainzPercent = calculateGainzPercent(currentPrice, historicPrice)
-    val difference = investedPrice?.let { (gainzPercent.first.div(100)).times(investedPrice) }
+fun currentValue(spotPrice: Double?, historicPrice: Double, investedPrice: Double?): Double? {
+    var gainzPercent = calculateGainzPercent(historicPrice, spotPrice)
+    val difference = investedPrice?.let { (gainzPercent.first?.div(100))?.times(investedPrice) }
     val currencyGainz = difference?.let { investedPrice.plus(it) }
     return if (investedPrice == null) {
         0.00
@@ -55,9 +55,9 @@ fun currentValue(currentPrice: String?, historicPrice: Double, investedPrice: Do
     }
 }
 
-fun calculateGainzPercent(current: String?, historic: Double?): Pair<Double, Double> {
-    val difference = unformatCurrency(current!!).minus(historic!!)
-    val gainzIntPercent = (difference.div(historic)).times(100)
+fun calculateGainzPercent(historicPrice: Double?, spotPrice: Double?): Pair<Double?, Double?> {
+    val difference = spotPrice?.minus(historicPrice!!)
+    val gainzIntPercent = (difference?.div(historicPrice!!))?.times(100)
     Log.i("CheckViewModel", "Gainz List Percent: $gainzIntPercent Difference: $difference")
     return Pair (gainzIntPercent, difference)
 }
