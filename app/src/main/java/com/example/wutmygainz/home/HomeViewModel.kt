@@ -1,14 +1,15 @@
 package com.example.wutmygainz.home
 
+import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.wutmygainz.database.Investments
+import com.example.wutmygainz.database.InvestmentsDatabase
 import com.example.wutmygainz.database.InvestmentsDatabaseDAO
 import com.example.wutmygainz.network.CoinbaseApi
+import com.example.wutmygainz.repository.InvestmentsRepository
 import kotlinx.coroutines.*
 import java.text.DecimalFormat
 import java.text.Normalizer
@@ -21,10 +22,7 @@ import java.time.format.FormatStyle
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.N)
-class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() {
-
-    private val viewModelJob = Job()
-    val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+class HomeViewModel(application: Application) : ViewModel() {
 
     private var _historicPrice = MutableLiveData<String>()
     val historicPrice: LiveData<String>
@@ -55,7 +53,8 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
         get() = _investedPrice
 
     // Calls database to get Room Database into listData attribute in RecyclerView
-    val getAllInvestments = database.getAllInvestments()
+    val investmentsRepository = InvestmentsRepository(InvestmentsDatabase.getInstance(application))
+    val getAllInvestments = investmentsRepository.getAllInvestments
     var theCurrentPrice = ""
     val allCurrentPrices: MutableMap<String, Double> = mutableMapOf()
 
@@ -78,15 +77,13 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
     }
     @RequiresApi(Build.VERSION_CODES.O)
     fun trackInvestments() {
-        coroutineScope.launch {
-            withContext(Dispatchers.IO) {
-                val gatherData = gatherInvestmentData()
-                insertNewInvestment(gatherData)
-            }
+        viewModelScope.launch {
+            val gatherData = gatherInvestmentData()
+            investmentsRepository.insertNewInvestment(gatherData)
         }
     }
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun gatherInvestmentData(): Investments {
         val newInvestment = Investments()
         newInvestment.purchaseDate = formatToMilli(selectedDate.value!!)
@@ -96,14 +93,9 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
         Log.i("CheckHomeViewModel", "gatherInvestmentData: $newInvestment")
         return newInvestment
     }
-    private suspend fun insertNewInvestment(newInvestment: Investments) {
-        withContext(Dispatchers.IO) {
-            database.insertNew(newInvestment)
-            Log.i("CheckHomeViewModel", "Room: $newInvestment")
-        }
-    }
+
     fun getAllCoinSpotPrices(pairs: String) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val responseSpot = CoinbaseApi.retrofitService.getCurrentCoinPrice(pairs)
             if (responseSpot.isSuccessful) {
                 val spotPrice = responseSpot.body()?.data?.amount
@@ -114,7 +106,7 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
     }
 
     private fun getCoinPrices() {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val responseHistoric = CoinbaseApi.retrofitService.getHistoricCoinPrice(_currencyPair.value!!, _selectedDate.value!!)
             val responseSpot = CoinbaseApi.retrofitService.getCurrentCoinPrice(_currencyPair.value!!)
 
@@ -190,7 +182,7 @@ class HomeViewModel(private val database: InvestmentsDatabaseDAO) : ViewModel() 
         val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         _selectedDate.value = formatterDate.format(pickDate.time)
         getCoinPrices()
-        coroutineScope.launch {
+        viewModelScope.launch {
             val refresh = async { refreshGainz() }
             refresh.await()
         }

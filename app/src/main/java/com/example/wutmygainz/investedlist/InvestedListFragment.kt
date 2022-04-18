@@ -1,11 +1,13 @@
 package com.example.wutmygainz.investedlist
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +24,7 @@ class InvestedListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var sharedViewModel: HomeViewModel
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,10 +33,8 @@ class InvestedListFragment : Fragment() {
         _binding = FragmentInvestedListBinding.inflate(inflater, container, false)
 
         val application = requireNotNull(this.activity).application
-
-        val datasource = InvestmentsDatabase.getInstance(application).investmentDatabaseDao
-
-        val viewModelFactory = HomeViewModelFactory(datasource)
+        
+        val viewModelFactory = HomeViewModelFactory(application)
 
         sharedViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
 
@@ -52,8 +53,4 @@ class InvestedListFragment : Fragment() {
         Log.i("CheckListFragment", "Current Price? ${sharedViewModel.theCurrentPrice}")
         return binding.root
     }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//    }
 }

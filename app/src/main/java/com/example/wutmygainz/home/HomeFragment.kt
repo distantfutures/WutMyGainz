@@ -25,9 +25,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-//    private val homeViewModel: HomeViewModel by lazy {
-//        ViewModelProvider(this).get(HomeViewModel::class.java)
-//    }
     private lateinit var homeViewModel: HomeViewModel
 
     override fun onDestroy() {
@@ -35,6 +32,7 @@ class HomeFragment : Fragment() {
         super.onDestroy()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onPause() {
         Log.i("CheckHomeFragment", "Fragment Paused!")
         Log.i("CheckHomeFragment", "Pre-Binding Test ${homeViewModel.theCurrentPrice}")
@@ -69,9 +67,7 @@ class HomeFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
-        val datasource = InvestmentsDatabase.getInstance(application).investmentDatabaseDao
-
-        val viewModelFactory = HomeViewModelFactory(datasource)
+        val viewModelFactory = HomeViewModelFactory(application)
 
         // Need to understand why requireActivity() works and "this" doesn't
         homeViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
