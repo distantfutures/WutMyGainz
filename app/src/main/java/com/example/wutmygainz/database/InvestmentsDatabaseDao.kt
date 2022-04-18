@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 
 @Dao
-interface InvestmentsDatabaseDAO {
+interface InvestmentsDatabaseDao {
     @Insert
     fun insertNew(investments: Investments)
     @Update

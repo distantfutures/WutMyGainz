@@ -6,19 +6,13 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.wutmygainz.database.Investments
-import com.example.wutmygainz.database.InvestmentsDatabase
-import com.example.wutmygainz.database.InvestmentsDatabaseDAO
+import com.example.wutmygainz.database.AppDatabase
 import com.example.wutmygainz.network.CoinbaseApi
+import com.example.wutmygainz.repository.CoinbaseRepository
 import com.example.wutmygainz.repository.InvestmentsRepository
 import kotlinx.coroutines.*
 import java.text.DecimalFormat
-import java.text.Normalizer
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -53,8 +47,11 @@ class HomeViewModel(application: Application) : ViewModel() {
         get() = _investedPrice
 
     // Calls database to get Room Database into listData attribute in RecyclerView
-    val investmentsRepository = InvestmentsRepository(InvestmentsDatabase.getInstance(application))
+    val investmentsRepository = InvestmentsRepository(AppDatabase.getInstance(application))
     val getAllInvestments = investmentsRepository.getAllInvestments
+
+    val coinbaseRepository = CoinbaseRepository(AppDatabase.getInstance(application))
+
     var theCurrentPrice = ""
     val allCurrentPrices: MutableMap<String, Double> = mutableMapOf()
 
@@ -96,12 +93,9 @@ class HomeViewModel(application: Application) : ViewModel() {
 
     fun getAllCoinSpotPrices(pairs: String) {
         viewModelScope.launch {
-            val responseSpot = CoinbaseApi.retrofitService.getCurrentCoinPrice(pairs)
-            if (responseSpot.isSuccessful) {
-                val spotPrice = responseSpot.body()?.data?.amount
-                allCurrentPrices.put(pairs, spotPrice!!)
-                Log.i("CheckViewModel", "MAP TEST: $allCurrentPrices")
-            }
+            val spotPrice = coinbaseRepository.getAllSpotPrices(pairs)
+            allCurrentPrices.put(pairs, spotPrice)
+            Log.i("CheckViewModel", "MAP TEST: $allCurrentPrices")
         }
     }
 
@@ -186,7 +180,6 @@ class HomeViewModel(application: Application) : ViewModel() {
             val refresh = async { refreshGainz() }
             refresh.await()
         }
-//        formatToMilli(formatterDate.format(pickDate.time))
     }
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatToMilli(date: String): Long {

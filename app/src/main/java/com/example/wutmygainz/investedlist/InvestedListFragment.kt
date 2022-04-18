@@ -8,11 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.example.wutmygainz.R
-import com.example.wutmygainz.database.InvestmentsDatabase
 import com.example.wutmygainz.databinding.FragmentInvestedListBinding
 import com.example.wutmygainz.home.HomeViewModel
 import com.example.wutmygainz.home.HomeViewModelFactory

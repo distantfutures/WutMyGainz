@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.wutmygainz.database.InvestmentsDatabaseDAO
 
 class HomeViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
     @RequiresApi(Build.VERSION_CODES.N)

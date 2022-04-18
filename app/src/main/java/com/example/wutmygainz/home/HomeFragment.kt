@@ -11,13 +11,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.wutmygainz.R
-import com.example.wutmygainz.database.InvestmentsDatabase
-import com.example.wutmygainz.database.InvestmentsDatabaseDAO
 import com.example.wutmygainz.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
