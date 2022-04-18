@@ -8,6 +8,7 @@ import com.example.wutmygainz.network.DataObject
 interface DataObjectDao {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     fun insert(crypto: DataObject)
+    // Create function to DeleteDatabase on Startup
     @Query("SELECT * from current_crypto_price_table WHERE crypto = :key")
     fun getSpotPrice(key: String): DataObject
     @Query("DELETE FROM current_crypto_price_table")

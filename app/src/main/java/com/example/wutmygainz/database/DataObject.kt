@@ -9,7 +9,6 @@ data class DataObject(
     val data: Data
 )
 data class Data(
-
     @ColumnInfo(name = "crypto")
     val base : String,
 

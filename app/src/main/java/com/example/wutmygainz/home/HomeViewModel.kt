@@ -8,6 +8,7 @@ import androidx.lifecycle.*
 import com.example.wutmygainz.database.Investments
 import com.example.wutmygainz.database.AppDatabase
 import com.example.wutmygainz.network.CoinbaseApi
+import com.example.wutmygainz.network.DataObject
 import com.example.wutmygainz.repository.CoinbaseRepository
 import com.example.wutmygainz.repository.InvestmentsRepository
 import kotlinx.coroutines.*
@@ -165,7 +166,11 @@ class HomeViewModel(application: Application) : ViewModel() {
         val currencyAsDouble = price.replace(",", "")
         return currencyAsDouble.toDouble()
     }
-
+    fun onDeleteTable() {
+        viewModelScope.launch {
+            coinbaseRepository.deleteTable()
+        }
+    }
     fun pickedDate(year: Int, month: Int, day: Int) {
         val pickDate = Calendar.getInstance()
         pickYear = year
