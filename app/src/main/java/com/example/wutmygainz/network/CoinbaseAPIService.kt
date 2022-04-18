@@ -12,11 +12,6 @@ import retrofit2.http.Query
 
 private const val BASE_URL = "https://api.coinbase.com/v2/"
 
-// Use Moshi Builder to create Moshi object w. KotlinJsonAdapterFactory
-private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
-    .build()
-
 // Fetches JSON response. Create Retrofit Builder using scalars converter factory & give base url of web service.
 private val retrofit = Retrofit.Builder()
     // Turns Json response into Kotlin Objects

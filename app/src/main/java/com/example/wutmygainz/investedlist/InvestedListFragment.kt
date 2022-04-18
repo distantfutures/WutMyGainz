@@ -33,7 +33,7 @@ class InvestedListFragment : Fragment() {
         _binding = FragmentInvestedListBinding.inflate(inflater, container, false)
 
         val application = requireNotNull(this.activity).application
-        
+
         val viewModelFactory = HomeViewModelFactory(application)
 
         sharedViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
