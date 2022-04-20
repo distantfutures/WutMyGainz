@@ -155,7 +155,11 @@ class HomeViewModel(application: Application) : ViewModel() {
 
     fun onSetSelectedPairs(pairs: String) {
         _currencyPair.value = pairs
-        getCoinPrices()
+//        getCoinPrices()
+        val coin = pairs.replace("-USD", "")
+        viewModelScope.launch {
+            _currentPrice.value = coinbaseRepository.getSpotPriceOf(coin).currencyFormat()
+        }
         Log.i("CheckViewModel", "Selected Pairs: ${_currencyPair.value}")
     }
     private fun Double.currencyFormat(): String {

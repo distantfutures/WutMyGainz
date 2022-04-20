@@ -1,5 +1,6 @@
 package com.example.wutmygainz.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.wutmygainz.database.AppDatabase
 import com.example.wutmygainz.network.CoinbaseApi
@@ -8,6 +9,7 @@ import com.example.wutmygainz.network.DataObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+const val TAG = "CBRepoCheck"
 class CoinbaseRepository(private val database: AppDatabase) {
     val getAllSpotPrices: LiveData<List<DataObject>> = database.dataObjectDao.getAllCoinPrices()
 
@@ -34,5 +36,13 @@ class CoinbaseRepository(private val database: AppDatabase) {
         withContext(Dispatchers.IO) {
             database.dataObjectDao.deleteAll()
         }
+    }
+    suspend fun getSpotPriceOf(coin: String): Double {
+        var price = 0.0
+        withContext(Dispatchers.IO) {
+            price = database.dataObjectDao.getSpotPrice(coin).data.amount
+            Log.i(TAG, "Pair $coin")
+        }
+        return price
     }
 }
