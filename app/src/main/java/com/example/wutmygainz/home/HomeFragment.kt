@@ -102,7 +102,7 @@ class HomeFragment : Fragment() {
         val allCoinPairs = resources.getStringArray(R.array.currency_pairs)
         for (i in allCoinPairs.indices) {
             Log.i(TAG, "StringCheck: ${allCoinPairs[i]}")
-            homeViewModel.getAllCoinSpotPrices(allCoinPairs[i])
+            homeViewModel.getAllSpotPrices(allCoinPairs[i])
         }
     }
 //    @RequiresApi(Build.VERSION_CODES.N)

@@ -5,12 +5,14 @@ import android.os.Build
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.text.HtmlCompat
 import com.example.wutmygainz.database.Investments
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+private const val TAG = "UtilCheck"
 fun formatInvestments(investments: Investments, spotPrice: Double?, resources: Resources): Spanned? {
     val sb = StringBuilder()
     sb.apply {
@@ -71,4 +73,11 @@ fun formatPercent(gainzPercent: Double?, difference: Double?): String {
 fun unformatCurrency(price: String): Double {
     val currencyAsDouble = price.replace(",", "")
     return currencyAsDouble.toDouble()
+}
+@RequiresApi(Build.VERSION_CODES.O)
+fun formatToMilli(date: String): Long {
+    val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val dateInMilliseconds = formatterDate.parse(date)
+    Log.i(TAG, "Date in milli: $dateInMilliseconds")
+    return dateInMilliseconds.time
 }
