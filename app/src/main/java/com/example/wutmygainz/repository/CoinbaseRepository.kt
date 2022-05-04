@@ -9,7 +9,7 @@ import com.example.wutmygainz.network.DataObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-const val TAG = "CBRepoCheck"
+private const val TAG = "CBRepoCheck"
 class CoinbaseRepository(private val database: AppDatabase) {
     val getAllSpotPrices: LiveData<List<DataObject>> = database.dataObjectDao.getAllCoinPrices()
 
@@ -24,7 +24,21 @@ class CoinbaseRepository(private val database: AppDatabase) {
                 price = spotPriceList!!
             }
         }
+        Log.i(TAG, "Price Check: $price")
         return price
+    }
+
+    suspend fun getHistoricPrice(pairs: String, date: String): Double {
+        var historicPrice = 0.0
+        withContext(Dispatchers.IO) {
+            val responseHistoric = CoinbaseApi.retrofitService.getHistoricCoinPrice(pairs, date)
+            if (responseHistoric.isSuccessful) {
+                val response = responseHistoric.body()?.data
+                // Insert Historic Price into DB
+                historicPrice = response?.amount!!
+            }
+        }
+        return historicPrice
     }
     private suspend fun insertSpotPrice(data: Data) {
         withContext(Dispatchers.IO) {

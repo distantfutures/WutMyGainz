@@ -5,12 +5,15 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
+import com.example.wutmygainz.currencyFormat
 import com.example.wutmygainz.database.Investments
 import com.example.wutmygainz.database.AppDatabase
+import com.example.wutmygainz.formatCurrency
 import com.example.wutmygainz.network.CoinbaseApi
 import com.example.wutmygainz.network.DataObject
 import com.example.wutmygainz.repository.CoinbaseRepository
 import com.example.wutmygainz.repository.InvestmentsRepository
+import com.example.wutmygainz.unformatCurrency
 import kotlinx.coroutines.*
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -19,8 +22,8 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.N)
 class HomeViewModel(application: Application) : ViewModel() {
 
-    private var _historicPrice = MutableLiveData<String>()
-    val historicPrice: LiveData<String>
+    private var _historicPrice = MutableLiveData<String?>()
+    val historicPrice: LiveData<String?>
         get() = _historicPrice
 
     private var _currentPrice = MutableLiveData<String>()
@@ -44,14 +47,14 @@ class HomeViewModel(application: Application) : ViewModel() {
         get() = _theGainzCurrency
 
     private var _investedPrice = MutableLiveData<Double?>()
-    val investedPrice: LiveData<Double?>
+    private val investedPrice: LiveData<Double?>
         get() = _investedPrice
 
     // Calls database to get Room Database into listData attribute in RecyclerView
-    val investmentsRepository = InvestmentsRepository(AppDatabase.getInstance(application))
+    private val investmentsRepository = InvestmentsRepository(AppDatabase.getInstance(application))
     val getAllInvestments = investmentsRepository.getAllInvestments
 
-    val coinbaseRepository = CoinbaseRepository(AppDatabase.getInstance(application))
+    private val coinbaseRepository = CoinbaseRepository(AppDatabase.getInstance(application))
 
     var theCurrentPrice = ""
     val allCurrentPrices: MutableMap<String, Double> = mutableMapOf()
@@ -95,11 +98,18 @@ class HomeViewModel(application: Application) : ViewModel() {
     fun getAllCoinSpotPrices(pairs: String) {
         viewModelScope.launch {
             val spotPrice = coinbaseRepository.getAllSpotPrices(pairs)
-            allCurrentPrices.put(pairs, spotPrice)
+            allCurrentPrices[pairs] = spotPrice
             Log.i("CheckViewModel", "MAP TEST: $allCurrentPrices")
         }
     }
 
+    fun getHistoricPrice(pair: String, date: String) {
+        viewModelScope.launch {
+            val historicPrice = coinbaseRepository.getHistoricPrice(pair, date)
+            _historicPrice.value = formatCurrency(historicPrice)
+        }
+    }
+    // REFACTOR THIS
     private fun getCoinPrices() {
         viewModelScope.launch {
             val responseHistoric = CoinbaseApi.retrofitService.getHistoricCoinPrice(_currencyPair.value!!, _selectedDate.value!!)
@@ -107,11 +117,11 @@ class HomeViewModel(application: Application) : ViewModel() {
 
             if (responseHistoric.isSuccessful) {
                 val historicDouble = responseHistoric.body()?.data?.amount
-                _historicPrice.value = historicDouble?.currencyFormat()
+                _historicPrice.value = historicDouble?.let { formatCurrency(it) }
                 Log.i("CheckViewModel", "API SERVICE - Historic: ${responseHistoric.body()?.data?.amount}")
 
                 val currentDouble = responseSpot.body()?.data?.amount
-                _currentPrice.value = currentDouble?.currencyFormat()
+                _currentPrice.value = currentDouble?.let { formatCurrency(it) }
                 theCurrentPrice = currentDouble.toString()
                 Log.i("CheckViewModel", "Pre-Binding Test $theCurrentPrice")
                 Log.i("CheckViewModel", "API SERVICE - Current: ${responseSpot.body()?.data?.amount}")
@@ -158,17 +168,10 @@ class HomeViewModel(application: Application) : ViewModel() {
 //        getCoinPrices()
         val coin = pairs.replace("-USD", "")
         viewModelScope.launch {
-            _currentPrice.value = coinbaseRepository.getSpotPriceOf(coin).currencyFormat()
+            val spotPrice = coinbaseRepository.getSpotPriceOf(coin)
+            _currentPrice.value = formatCurrency(spotPrice)
         }
         Log.i("CheckViewModel", "Selected Pairs: ${_currencyPair.value}")
-    }
-    private fun Double.currencyFormat(): String {
-        val decimalFormat = DecimalFormat("#,###,##0.00")
-        return decimalFormat.format(this)
-    }
-    private fun unformatCurrency(price: String): Double {
-        val currencyAsDouble = price.replace(",", "")
-        return currencyAsDouble.toDouble()
     }
     fun onDeleteTable() {
         viewModelScope.launch {

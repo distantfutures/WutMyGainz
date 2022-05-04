@@ -68,7 +68,7 @@ fun formatPercent(gainzPercent: Double?, difference: Double?): String {
         String.format("%%%.2f", gainzPercent)
     }
 }
-private fun unformatCurrency(price: String): Double {
+fun unformatCurrency(price: String): Double {
     val currencyAsDouble = price.replace(",", "")
     return currencyAsDouble.toDouble()
 }
