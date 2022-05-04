@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.wutmygainz.R
 import com.example.wutmygainz.databinding.FragmentHomeBinding
 
+private const val TAG = "HomeFragCheck"
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -100,20 +101,31 @@ class HomeFragment : Fragment() {
     private fun getAllSpotPrices() {
         val allCoinPairs = resources.getStringArray(R.array.currency_pairs)
         for (i in allCoinPairs.indices) {
-            Log.i("StringCheck", allCoinPairs[i])
+            Log.i(TAG, "StringCheck: ${allCoinPairs[i]}")
             homeViewModel.getAllCoinSpotPrices(allCoinPairs[i])
         }
     }
+//    @RequiresApi(Build.VERSION_CODES.N)
+//    private fun getAllHistoricPrices(date: String) {
+//        val allCoinPairs = resources.getStringArray(R.array.currency_pairs)
+//        for (i in allCoinPairs.indices) {
+//            Log.i(TAG, "StringCheck: ${allCoinPairs[i]}")
+//            homeViewModel.getHistoricPrice(allCoinPairs[i], date)
+//        }
+//    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun datePickerDialog() {
         DatePickerDialog(requireActivity(),  android.R.style.Theme_Material_Dialog, { _, year, month, day ->
             homeViewModel.pickedDate(year, month, day)
-            showToastLong(homeViewModel.selectedDate.value)
+            val date = homeViewModel.selectedDate.value
+            val pair = homeViewModel.currencyPair.value
+            showToastLong(date)
             getAllSpotPrices()
+            homeViewModel.getHistoricPrice(pair!!, date!!)
         }, homeViewModel.startYear, homeViewModel.startMonth, homeViewModel.startDay).show()
     }
-    fun showToastLong(str: String?) {
+    private fun showToastLong(str: String?) {
         Toast.makeText(context, str, Toast.LENGTH_LONG).show()
     }
 }

@@ -40,7 +40,7 @@ fun formatLongDate(date: Investments): String {
 }
 
 fun formatCurrency(investedPrice: Double): String {
-    val decimalFormat = DecimalFormat("$#,###,##0.00")
+    val decimalFormat = DecimalFormat("#,###,##0.00")
     return decimalFormat.format(investedPrice)
 }
 

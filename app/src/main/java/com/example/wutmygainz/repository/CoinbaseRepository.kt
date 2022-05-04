@@ -28,6 +28,15 @@ class CoinbaseRepository(private val database: AppDatabase) {
         return price
     }
 
+    suspend fun getSpotPrice(pairs: String): Double {
+        var double: Double
+        withContext(Dispatchers.IO) {
+            val responseSpot = CoinbaseApi.retrofitService.getCurrentCoinPrice(pairs)
+            double = responseSpot.body()?.data?.amount!!
+        }
+        return double
+    }
+
     suspend fun getHistoricPrice(pairs: String, date: String): Double {
         var historicPrice = 0.0
         withContext(Dispatchers.IO) {
@@ -51,8 +60,8 @@ class CoinbaseRepository(private val database: AppDatabase) {
             database.dataObjectDao.deleteAll()
         }
     }
-    suspend fun getSpotPriceOf(coin: String): Double {
-        var price = 0.0
+    suspend fun getSpotPriceDB(coin: String): Double {
+        var price: Double
         withContext(Dispatchers.IO) {
             price = database.dataObjectDao.getSpotPrice(coin).data.amount
             Log.i(TAG, "Pair $coin")

@@ -5,20 +5,17 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import com.example.wutmygainz.currencyFormat
 import com.example.wutmygainz.database.Investments
 import com.example.wutmygainz.database.AppDatabase
 import com.example.wutmygainz.formatCurrency
-import com.example.wutmygainz.network.CoinbaseApi
-import com.example.wutmygainz.network.DataObject
 import com.example.wutmygainz.repository.CoinbaseRepository
 import com.example.wutmygainz.repository.InvestmentsRepository
 import com.example.wutmygainz.unformatCurrency
 import kotlinx.coroutines.*
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+private const val TAG = "HomeVMCheck"
 @RequiresApi(Build.VERSION_CODES.N)
 class HomeViewModel(application: Application) : ViewModel() {
 
@@ -73,8 +70,9 @@ class HomeViewModel(application: Application) : ViewModel() {
         _theGainzPercent.value = "00.00"
         _currencyPair.value = "BTC-USD"
         _theGainzCurrency.value = 0.00
+        getSpotPriceOf()
         getDateCalendar()
-        Log.i("CheckViewModel", "Initialized!")
+        Log.i(TAG, "Initialized!")
     }
     @RequiresApi(Build.VERSION_CODES.O)
     fun trackInvestments() {
@@ -91,44 +89,33 @@ class HomeViewModel(application: Application) : ViewModel() {
         newInvestment.currencyPair = currencyPair.value!!
         newInvestment.investedPrice = investedPrice.value!!
         newInvestment.historicPrice = unformatCurrency(historicPrice.value!!)
-        Log.i("CheckHomeViewModel", "gatherInvestmentData: $newInvestment")
+        Log.i(TAG, "gatherInvestmentData: $newInvestment")
         return newInvestment
+    }
+
+    fun getSpotPriceOf() {
+        viewModelScope.launch {
+            val spot = coinbaseRepository.getSpotPrice(_currencyPair.value!!)
+            _currentPrice.value = formatCurrency(spot)
+        }
     }
 
     fun getAllCoinSpotPrices(pairs: String) {
         viewModelScope.launch {
             val spotPrice = coinbaseRepository.getAllSpotPrices(pairs)
             allCurrentPrices[pairs] = spotPrice
-            Log.i("CheckViewModel", "MAP TEST: $allCurrentPrices")
+            Log.i(TAG, "MAP TEST: $allCurrentPrices")
         }
+    }
+    private fun setCurrentPrice() {
+        val pair = _currencyPair.value
+        _currentPrice.value = allCurrentPrices[pair]?.let { formatCurrency(it) }
     }
 
     fun getHistoricPrice(pair: String, date: String) {
         viewModelScope.launch {
             val historicPrice = coinbaseRepository.getHistoricPrice(pair, date)
             _historicPrice.value = formatCurrency(historicPrice)
-        }
-    }
-    // REFACTOR THIS
-    private fun getCoinPrices() {
-        viewModelScope.launch {
-            val responseHistoric = CoinbaseApi.retrofitService.getHistoricCoinPrice(_currencyPair.value!!, _selectedDate.value!!)
-            val responseSpot = CoinbaseApi.retrofitService.getCurrentCoinPrice(_currencyPair.value!!)
-
-            if (responseHistoric.isSuccessful) {
-                val historicDouble = responseHistoric.body()?.data?.amount
-                _historicPrice.value = historicDouble?.let { formatCurrency(it) }
-                Log.i("CheckViewModel", "API SERVICE - Historic: ${responseHistoric.body()?.data?.amount}")
-
-                val currentDouble = responseSpot.body()?.data?.amount
-                _currentPrice.value = currentDouble?.let { formatCurrency(it) }
-                theCurrentPrice = currentDouble.toString()
-                Log.i("CheckViewModel", "Pre-Binding Test $theCurrentPrice")
-                Log.i("CheckViewModel", "API SERVICE - Current: ${responseSpot.body()?.data?.amount}")
-                calculateTheGainz(currentDouble, historicDouble)
-            } else {
-                Log.i("CheckAPI Service", "Failed!")
-            }
         }
     }
 
@@ -140,8 +127,8 @@ class HomeViewModel(application: Application) : ViewModel() {
         currentDate.set(startYear, startMonth, startDay)
         val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         _selectedDate.value = formatterDate.format(currentDate.time)
-        Log.i("CheckViewModel", "Initial Date: $startYear $startMonth $startDay")
-        getCoinPrices()
+        Log.i(TAG, "Initial Date: $startYear $startMonth $startDay")
+        setCurrentPrice()
     }
 
     fun onSetInvestedAmount(cost: Double?) {
@@ -149,29 +136,29 @@ class HomeViewModel(application: Application) : ViewModel() {
         val currencyGainz = cost?.let { (_theGainzPercent.value?.toDouble()?.div(100))?.times(it) }
         if (cost == null) {
             _theGainzCurrency.value = 0.00
-            Log.i("CheckViewModel", "NULL SetInvested Amount: ${_investedPrice.value}")
+            Log.i(TAG, "NULL SetInvested Amount: ${_investedPrice.value}")
         } else {
             // Add format with commas. Change to strings?
             _theGainzCurrency.value = currencyGainz
-            Log.i("CheckViewModel", "SetInvested Amount: ${_investedPrice.value}")
+            Log.i(TAG, "SetInvested Amount: ${_investedPrice.value}")
         }
     }
     suspend fun refreshGainz() {
         delay(1000)
         // Needs to wait for new API CALL
         onSetInvestedAmount(_investedPrice.value)
-        Log.i("CheckViewModel", " Refresh: ${_investedPrice.value}")
+        Log.i(TAG, " Refresh: ${_investedPrice.value}")
     }
 
     fun onSetSelectedPairs(pairs: String) {
         _currencyPair.value = pairs
-//        getCoinPrices()
         val coin = pairs.replace("-USD", "")
         viewModelScope.launch {
-            val spotPrice = coinbaseRepository.getSpotPriceOf(coin)
+            val spotPrice = coinbaseRepository.getSpotPriceDB(coin)
             _currentPrice.value = formatCurrency(spotPrice)
         }
-        Log.i("CheckViewModel", "Selected Pairs: ${_currencyPair.value}")
+        getHistoricPrice(pairs, _selectedDate.value!!)
+        Log.i(TAG, "Selected Pairs: ${_currencyPair.value}")
     }
     fun onDeleteTable() {
         viewModelScope.launch {
@@ -187,7 +174,7 @@ class HomeViewModel(application: Application) : ViewModel() {
         // format Date
         val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         _selectedDate.value = formatterDate.format(pickDate.time)
-        getCoinPrices()
+        setCurrentPrice()
         viewModelScope.launch {
             val refresh = async { refreshGainz() }
             refresh.await()
@@ -197,7 +184,7 @@ class HomeViewModel(application: Application) : ViewModel() {
     fun formatToMilli(date: String): Long {
         val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val dateInMilliseconds = formatterDate.parse(date)
-        Log.i("CheckHomeViewModel", "Date in milli: $dateInMilliseconds")
+        Log.i(TAG, "Date in milli: $dateInMilliseconds")
         return dateInMilliseconds.time
     }
     fun calculateTheGainz(current: Double?, historic: Double?) {
@@ -209,17 +196,6 @@ class HomeViewModel(application: Application) : ViewModel() {
         } else {
             _theGainzPercent.value = gainzString
         }
-        Log.i("CheckViewModel", "Gainz Percent: $gainzString")
-    }
-    fun calculateGainzList(current: String, historic: Double?): String {
-        val currentCurrency = unformatCurrency(current)
-        val difference = currentCurrency.minus(historic!!)
-        val gainzIntPercent = (difference.div(historic)).times(100)
-        Log.i("CheckViewModel", "Gainz List Percent: $gainzIntPercent Current: $currentCurrency Difference: $difference")
-        return if (difference > 0) {
-            String.format("%+.2f", gainzIntPercent)
-        } else {
-            String.format("%.2f", gainzIntPercent)
-        }
+        Log.i(TAG, "Gainz Percent: $gainzString")
     }
 }
