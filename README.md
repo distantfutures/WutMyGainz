@@ -14,3 +14,10 @@ It takes in to consideration your invested amount, your coin pairs to USD, and d
 - Coroutines
 - ViewModel
 - ViewPager
+
+## Images
+Home Screen > InvestedList Screen
+
+![Test Image 4](https://imgur.com/cAyRKd3.png)
+![Test Image 4](https://imgur.com/FXeaj7o.png)
+![Test Image 4](https://imgur.com/yBsKEHb.png)
