@@ -3,6 +3,8 @@ package com.example.wutmygainz.home
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +13,13 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.wutmygainz.R
 import com.example.wutmygainz.databinding.FragmentHomeBinding
+import kotlinx.android.synthetic.main.fragment_home.*
+import org.w3c.dom.Text
 
 private const val TAG = "HomeFragCheck"
 class HomeFragment : Fragment() {
@@ -77,6 +82,14 @@ class HomeFragment : Fragment() {
 
         homeViewModel.onDeleteTable()
 
+        homeViewModel.isToday.observe(viewLifecycleOwner) {
+            if (it) {
+                homeViewModel.clearHistoricPrice()
+            }
+        }
+        homeViewModel.selectedDate.observe(viewLifecycleOwner) {
+            homeViewModel.setSpotPriceFromMap() //Needed here?
+        }
         binding.investedCostInputText.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
@@ -87,11 +100,22 @@ class HomeFragment : Fragment() {
                 else -> { true }
             }
         }
+        binding.investedCostInputText.addTextChangedListener(object :TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.addButton.isEnabled = s?.isNotEmpty() ?: false
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
 
         binding.currencyPairsTextView.setOnItemClickListener { parent, view, position, l ->
             val selectedPairs = parent.getItemAtPosition(position).toString()
-            Log.i("CheckHomeFrag", "ClickTest $selectedPairs")
-            homeViewModel.onSetSelectedPairs(selectedPairs)
+            Log.i(TAG, "ClickTest $selectedPairs")
+            homeViewModel.onSetPairs(selectedPairs)
         }
         getAllSpotPrices()
         return binding.root
@@ -105,24 +129,15 @@ class HomeFragment : Fragment() {
             homeViewModel.getAllSpotPrices(allCoinPairs[i])
         }
     }
-//    @RequiresApi(Build.VERSION_CODES.N)
-//    private fun getAllHistoricPrices(date: String) {
-//        val allCoinPairs = resources.getStringArray(R.array.currency_pairs)
-//        for (i in allCoinPairs.indices) {
-//            Log.i(TAG, "StringCheck: ${allCoinPairs[i]}")
-//            homeViewModel.getHistoricPrice(allCoinPairs[i], date)
-//        }
-//    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun datePickerDialog() {
         DatePickerDialog(requireActivity(),  android.R.style.Theme_Material_Dialog, { _, year, month, day ->
             homeViewModel.pickedDate(year, month, day)
             val date = homeViewModel.selectedDate.value
-            val pair = homeViewModel.currencyPair.value
             showToastLong(date)
             getAllSpotPrices()
-            homeViewModel.getHistoricPrice(pair!!, date!!)
+            Log.i(TAG, "Day selected! $day")
         }, homeViewModel.startYear, homeViewModel.startMonth, homeViewModel.startDay).show()
     }
     private fun showToastLong(str: String?) {

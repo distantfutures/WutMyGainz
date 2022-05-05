@@ -36,6 +36,7 @@
                 android:focusable="false"
                 android:gravity="center"
                 android:hint="@string/historic_price_text"
+                android:inputType="numberDecimal"
                 android:text="@{String.format(@string/historic_price, viewModelHome.historicPrice)}"
                 android:textSize="@dimen/crypto_price_text_size" />
 
@@ -141,16 +142,17 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
+                android:id="@+id/add_button"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:id="@+id/button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".75"
                 android:layout_marginStart="@dimen/margin_med"
                 android:layout_marginTop="3dp"
+                android:layout_weight=".75"
+                android:enabled="false"
+                android:onClick="@{() -> viewModelHome.trackInvestments()}"
                 android:text="ADD"
-                android:textSize="@dimen/button_text_size"
-                android:onClick="@{() -> viewModelHome.trackInvestments()}"/>
+                android:textSize="@dimen/button_text_size" />
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout

@@ -49,6 +49,7 @@ class CoinbaseRepository(private val database: AppDatabase) {
         }
         return historicPrice
     }
+
     private suspend fun insertSpotPrice(data: Data) {
         withContext(Dispatchers.IO) {
             val dataObject = DataObject(data)

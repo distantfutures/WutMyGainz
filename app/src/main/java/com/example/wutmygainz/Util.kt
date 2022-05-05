@@ -81,3 +81,7 @@ fun formatToMilli(date: String): Long {
     Log.i(TAG, "Date in milli: $dateInMilliseconds")
     return dateInMilliseconds.time
 }
+fun formatDate(date: Calendar): String {
+    val formatterDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return formatterDate.format(date.time)
+}
